@@ -1,0 +1,16 @@
+node_modules/
+.idea
+src
+.github
+tsconfig.json
+gulpfile.js
+CODE-OF-CONDUCT.md
+.eslintignore
+.eslintrc
+tests
+babel.config.js
+CONTRIBUTING.md
+openapi
+jest.config.js
+Makefile
+docs/
