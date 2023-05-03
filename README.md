@@ -27,14 +27,14 @@ npm i -g scolengo-cli
 ## Usage
 
 ```
- ____            _                           ____ _     ___ 
- / ___|  ___ ___ | | ___ _ __   __ _  ___    / ___| |   |_ _|
- \___ \ / __/ _ \| |/ _ \ '_ \ / _` |/ _ \  | |   | |    | | 
-  ___) | (_| (_) | |  __/ | | | (_| | (_) | | |___| |___ | | 
- |____/ \___\___/|_|\___|_| |_|\__, |\___/   \____|_____|___|
-                               |___/                         
+                _                                   _ _ 
+  ___  ___ ___ | | ___ _ __   __ _  ___         ___| (_)
+ / __|/ __/ _ \| |/ _ \ '_ \ / _` |/ _ \ _____ / __| | |
+ \__ \ (_| (_) | |  __/ | | | (_| | (_) |_____| (__| | |
+ |___/\___\___/|_|\___|_| |_|\__, |\___/       \___|_|_|
+                             |___/                      
 
-Avertissement : Cet utilitaire n'est pas édité par Skolengo ou Kosmos Education.
+Avertissement : Cet utilitaire n'est pas édité par Skolengo et n'est en aucun cas lié à cette marque.
 Il s'agit d'une application non-officielle, Open Source et distribué sous licence GNU GPLv3.
 Pour plus d'informations, le dépôt git est accessible en suivant ce lien : https://github.com/maelgangloff/scolengo-cli
 
