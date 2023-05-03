@@ -3,6 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
+import { onTokenRefresh } from '../../functions/onTokenRefresh'
 
 interface CommandOpts {
   uid: string | undefined
@@ -16,7 +17,7 @@ const getDateFromISO = (date: Date): string => new Date(date).toISOString().spli
 
 async function calendar (filePath: string, { uid, student, from, to, limit }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  const user = await Skolengo.fromConfigObject(credentials.credentials)
+  const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefresh)
 
   const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
   const ics = agenda.toICalendar()
