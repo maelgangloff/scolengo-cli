@@ -4,6 +4,7 @@ import figlet from 'figlet'
 import updateNotifier from 'update-notifier'
 import chalk from 'chalk'
 import * as pkg from '../package.json'
+import { AuthCommand } from './commands/Auth'
 
 updateNotifier({ pkg }).notify({
   message: `Mise à jour disponible :
@@ -15,10 +16,14 @@ const program = new Command('scolengo')
 
 program
   .version(pkg.version)
-  .addHelpText('beforeAll', figlet.textSync('Scolengo CLI'))
+  .addHelpText('beforeAll', figlet.textSync('Scolengo CLI') + '\n')
   .addHelpText('before', chalk.yellowBright(`Avertissement : Cet utilitaire n'est pas édité par Skolengo ou Kosmos Education.
 Il s'agit d'une application non-officielle, Open Source et distribué sous licence GNU GPLv3.
 Pour plus d'informations, le dépôt git est accessible en suivant ce lien : https://github.com/maelgangloff/scolengo-cli
 `))
   .description("Exporter mes données accessibles depuis l'API Skolengo")
-  .parse(process.argv)
+  .addCommand(AuthCommand)
+  .parseAsync().catch((e: Error) => {
+    if (e.message !== undefined) console.error(chalk.redBright(e.message))
+    process.exit(1)
+  })
