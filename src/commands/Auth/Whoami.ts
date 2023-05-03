@@ -14,5 +14,6 @@ async function whoami ({ uid }: { uid: string | undefined }): Promise<void> {
 }
 
 export const WhoamiCommand = createCommand('whoami')
+  .description("Vérifier si l'utilisateur courant est correctement authentifié")
   .option('-u, --uid <user_uid>', "Identifiant unique de l'utilisateur courant")
   .action(whoami)

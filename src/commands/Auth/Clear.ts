@@ -8,4 +8,5 @@ async function clear (): Promise<void> {
 }
 
 export const ClearCommand = createCommand('clear')
+  .description('Supprimer toute la configuration de scolengo-cli')
   .action(clear)

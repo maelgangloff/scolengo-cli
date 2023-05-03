@@ -26,6 +26,8 @@ npm i -g scolengo-cli
 
 ## Usage
 
+### Commandes générales
+
 ```
                 _                                   _ _ 
   ___  ___ ___ | | ___ _ __   __ _  ___         ___| (_)
@@ -48,5 +50,37 @@ Options:
 
 Commands:
   auth            Gestion de l'authentification
+  export          Export des données
   help [command]  display help for command
+```
+
+### Authentification
+```
+Usage: scolengo auth [options] [command]
+
+Gestion de l'authentification
+
+Options:
+  -h, --help        display help for command
+
+Commands:
+  login <file>      Se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token
+  logout [options]  Se déconnecter et révoquer le refresh token
+  clear             Supprimer toute la configuration de scolengo-cli
+  whoami [options]  Vérifier si l'utilisateur courant est correctement authentifié
+  help [command]    display help for command
+```
+
+### Export de données
+```
+Usage: scolengo export [options] [command]
+
+Export des données
+
+Options:
+  -h, --help                        display help for command
+
+Commands:
+  calendar [options] [output-file]  Exporter l'agenda au format iCalendar (text/calendar)
+  help [command]                    display help for command
 ```
