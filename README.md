@@ -5,8 +5,8 @@ Une application console non-officielle permettant d'exporter ses données proven
 
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour télécharger ses propres données depuis le serveur API.
 
-
 ## Remarques importantes
+
  - Il est clairement mentionné que cette librairie est n'est pas officielle.
  - Ce module n'est pas une contrefaçon car il n'existe pas de module similaire édité officiellement.
  - Les utilisateurs ne peuvent accéder qu'à leurs propres données. Ils sont soumis au même processus d'authentification que celui implémenté dans l'application.
@@ -15,6 +15,13 @@ Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelganglo
  - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du fichier de licence GPLv3 disponible publiquement [LICENSE](https://github.com/maelgangloff/scolengo-cli/blob/master/LICENSE) ainsi que de ce présent fichier de présentation.
  - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du code de ce projet avant toute utilisation.
  - Eu égard l'ensemble de ces remarques, les contributeurs et *a fortiori* l'auteur du projet ne peuvent être tenus responsables de tout dommage potentiel.
+
+
+## Installation et mise à jour
+
+```shell
+npm i -g scolengo-cli
+```
 
 
 ## Usage
