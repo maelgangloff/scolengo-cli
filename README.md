@@ -5,22 +5,6 @@ Une application console non-officielle permettant d'exporter ses données proven
 
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour télécharger ses propres données depuis le serveur API.
 
-## Usage
-```
-  ____            _                           ____ _     ___ 
- / ___|  ___ ___ | | ___ _ __   __ _  ___    / ___| |   |_ _|
- \___ \ / __/ _ \| |/ _ \ '_ \ / _` |/ _ \  | |   | |    | | 
-  ___) | (_| (_) | |  __/ | | | (_| | (_) | | |___| |___ | | 
- |____/ \___\___/|_|\___|_| |_|\__, |\___/   \____|_____|___|
-                               |___/                         
-Usage: scolengo [options]
-
-Export your data from Skolengo API
-
-Options:
-  -V, --version  output the version number
-  -h, --help     display help for command
-```
 
 ## Remarques importantes
  - Il est clairement mentionné que cette librairie est n'est pas officielle.
@@ -31,3 +15,26 @@ Options:
  - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du fichier de licence GPLv3 disponible publiquement [LICENSE](https://github.com/maelgangloff/scolengo-cli/blob/master/LICENSE) ainsi que de ce présent fichier de présentation.
  - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du code de ce projet avant toute utilisation.
  - Eu égard l'ensemble de ces remarques, les contributeurs et *a fortiori* l'auteur du projet ne peuvent être tenus responsables de tout dommage potentiel.
+
+
+## Usage
+
+```
+  ____            _                           ____ _     ___ 
+ / ___|  ___ ___ | | ___ _ __   __ _  ___    / ___| |   |_ _|
+ \___ \ / __/ _ \| |/ _ \ '_ \ / _` |/ _ \  | |   | |    | | 
+  ___) | (_| (_) | |  __/ | | | (_| | (_) | | |___| |___ | | 
+ |____/ \___\___/|_|\___|_| |_|\__, |\___/   \____|_____|___|
+                               |___/                         
+Avertissement : Cet utilitaire n'est pas édité par Skolengo ou Kosmos Education.
+Il s'agit d'une application non-officielle, Open Source et distribué sous licence GNU GPLv3.
+Pour plus d'informations, le dépôt git est accessible en suivant ce lien : https://github.com/maelgangloff/scolengo-cli
+
+Usage: scolengo [options]
+
+Exporter mes données accessibles depuis l'API Skolengo
+
+Options:
+  -V, --version  output the version number
+  -h, --help     display help for command
+```
