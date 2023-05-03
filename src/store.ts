@@ -16,19 +16,25 @@ export function setCredentials (credentials: AuthConfig, userId: string): void {
 export function getCredentials (userId?: string): StoredCredentials {
   if (userId !== undefined) {
     const credentials = store.get(`credentials.${userId}`, null)
-    if (credentials === null) throw new Error('Impossible de trouver vos jetons, veuillez vous authentifier à nouveau.')
+    if (credentials === null) throw new Error(`Impossible de trouver les jetons de ${userId}, veuillez vous authentifier à nouveau.`)
+    store.set('lastUserId', userId)
+
     return credentials as StoredCredentials
   }
   const lastUserId = store.get('lastUserId', null) as string | null
-  if (lastUserId === null) throw new Error('Impossible de déterminer le dernier identifiant utilisé, veuillez le spécifier à nouveau.')
+  if (lastUserId === null) throw new Error("Impossible de déterminer l'identifiant à considérer, veuillez le spécifier.")
 
   const credentials = store.get(`credentials.${lastUserId}`, null)
-  if (credentials === null) throw new Error('Impossible de trouver vos jetons, veuillez vous authentifier à nouveau.')
+  if (credentials === null) throw new Error(`Impossible de trouver les jetons de ${lastUserId}, veuillez vous authentifier à nouveau.`)
 
   return credentials as StoredCredentials
 }
 
 export function deleteCredentials (userId: string): void {
+  const lastUserId = store.get('lastUserId', null) as string | null
+  if (lastUserId === userId) {
+    store.set('lastUserId', null)
+  }
   store.delete(`credentials.${userId}`)
 }
 

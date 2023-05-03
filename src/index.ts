@@ -24,6 +24,6 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .description("Exporter mes données accessibles depuis l'API Skolengo")
   .addCommand(AuthCommand)
   .parseAsync().catch((e: Error) => {
-    if (e.message !== undefined) console.error(chalk.redBright(e.message))
+    if (e.message !== undefined) console.error(chalk.redBright(`${e.name} : ${e.message}`))
     process.exit(1)
   })
