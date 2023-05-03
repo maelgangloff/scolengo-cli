@@ -1,5 +1,4 @@
 import { createCommand } from 'commander'
-import { userIdOption } from '../Options'
 import { deleteCredentials, getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
@@ -14,5 +13,5 @@ async function logout ({ uid }: { uid: string | undefined }): Promise<void> {
 }
 
 export const LogoutCommand = createCommand('logout')
-  .addOption(userIdOption)
+  .option('-u, --uid <user_uid>', "Identifiant unique de l'utilisateur courant")
   .action(logout)
