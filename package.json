@@ -1,6 +1,6 @@
 {
   "name": "scolengo-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "types": "types/index.d.ts",
   "bin": {
     "scolengo": "./dist/src/index.js"
