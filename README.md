@@ -26,7 +26,7 @@ npm i -g scolengo-cli
 
 ## Usage
 
-### Commandes générales
+### Commandes principales
 
 ```
                 _                                   _ _ 
