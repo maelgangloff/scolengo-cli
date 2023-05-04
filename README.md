@@ -1,6 +1,4 @@
 # scolengo-cli
-(EN COURS DE DEVELOPPEMENT)
-
 Une application console non-officielle permettant d'exporter ses données provenant de l'API Skolengo.
 
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour télécharger ses propres données depuis le serveur API.
@@ -23,11 +21,8 @@ Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelganglo
 npm i -g scolengo-cli
 ```
 
-
 ## Usage
-
 ### Commandes principales
-
 ```
                 _                                   _ _ 
   ___  ___ ___ | | ___ _ __   __ _  ___         ___| (_)
@@ -49,38 +44,63 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  auth            Gestion de l'authentification
-  export          Export des données
+  auth            Gérer l'authentification
+  export          exporter des données
   help [command]  display help for command
+
 ```
 
 ### Authentification
 ```
 Usage: scolengo auth [options] [command]
 
-Gestion de l'authentification
+Gérer l'authentification
 
 Options:
-  -h, --help        display help for command
+  -h, --help         display help for command
 
 Commands:
-  login <file>      Se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token
-  logout [options]  Se déconnecter et révoquer le refresh token
-  clear             Supprimer toute la configuration de scolengo-cli
-  whoami [options]  Vérifier si l'utilisateur courant est correctement authentifié
-  help [command]    display help for command
+  login <file>       Se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token
+  logout [options]   Se déconnecter et révoquer le refresh token
+  clear              Supprimer toute la configuration de scolengo-cli
+  whoami [options]   Vérifier si l'utilisateur courant est correctement authentifié
+  refresh [options]  Forcer le renouvellement de l'access token
+  help [command]     display help for command
 ```
 
-### Export de données
+### Exporter des données
+#### Agenda
 ```
-Usage: scolengo export [options] [command]
+Usage: scolengo export calendar [options] [output-file]
 
-Export des données
+Exporter l'agenda au format iCalendar (text/calendar)
+
+Arguments:
+  output-file                  chemin vers le fichier à sauvegarder
 
 Options:
-  -h, --help                        display help for command
+  -u, --uid <user_uid>         identifiant unique de l'utilisateur courant
+  -s, --student <student_uid>  identifiant unique de l'étudiant à considérer
+  -n, --limit <event_number>   nombre maximum d'évènements à télécharger (default: "100")
+  -e, --ext <file_format>      format des donnés (choices: "ics", "json", default: "ics")
+  -f, --from <from_date>       date de début YYYY-MM-DD
+  -t, --to <to_date>           date de fin YYYY-MM-DD
+  -h, --help                   display help for command
+```
 
-Commands:
-  calendar [options] [output-file]  Exporter l'agenda au format iCalendar (text/calendar)
-  help [command]                    display help for command
+#### Courriel
+```
+Usage: scolengo export mail [options] [output-file]
+
+Exporter les courriels internes dans un zip au format MIME
+
+Arguments:
+  output-file                 chemin vers le fichier à sauvegarder
+
+Options:
+  -u, --uid <user_uid>        identifiant unique de l'utilisateur courant
+  -n, --limit <event_number>  nombre maximum de communications à télécharger (default: "100")
+  -f, --folder <folder_id>    dossier à considérer (choices: "INBOX", "SENT", "DRAFTS", "MODERATION", "TRASH", "PERSONAL", default: "INBOX")
+  -e, --ext <file_format>     format des donnés (choices: "eml", "json", default: "eml")
+  -h, --help                  display help for command
 ```
