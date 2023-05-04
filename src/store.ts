@@ -8,8 +8,8 @@ interface StoredCredentials {
 
 const store = new Conf({ encryptionKey: 'U2hhcjNkIFNlY3JlVCBzY29sZW5nby1jbGk=' }) // Il ne s'agit pas d'une protection car le secret est public. C'est juste de l'offuscation du fichier de config local.
 
-export function setCredentials (credentials: AuthConfig, userId: string): void {
-  store.set(`credentials.${userId}`, { userId, credentials })
+export function setCredentials (skolengoCredentials: AuthConfig, userId: string): void {
+  store.set(`credentials.${userId}`, { userId, credentials: skolengoCredentials })
   store.set('lastUserId', userId)
 }
 

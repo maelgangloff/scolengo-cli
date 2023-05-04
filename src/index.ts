@@ -26,6 +26,6 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .addCommand(AuthCommand)
   .addCommand(ExportCommand)
   .parseAsync().catch((e: Error) => {
-    if (e.message !== undefined) console.error(chalk.redBright(`${e.name} : ${e.message}`))
+    console.error(chalk.redBright(`${e.name} : ${e.message}`))
     process.exit(1)
   })
