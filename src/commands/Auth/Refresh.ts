@@ -2,14 +2,14 @@ import { createCommand } from 'commander'
 import { getCredentials } from '../../store'
 import chalk from 'chalk'
 import { Skolengo, TokenSet } from 'scolengo-api'
-import { onTokenRefresh } from '../../functions/onTokenRefresh'
+import { onTokenRefreshSilent } from '../../functions/onTokenRefreshSilent'
 
 async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)
 
   const oidClient = await Skolengo.getOIDClient(credentials.credentials.school)
   const newTokenSet = await oidClient.refresh(new TokenSet(credentials.credentials.tokenSet))
-  onTokenRefresh(newTokenSet)
+  onTokenRefreshSilent(newTokenSet)
   const claims = newTokenSet.claims()
   console.log(chalk.gray(`UID : ${claims.sub}`))
   console.log(chalk.greenBright(`Le jeton a correctement été renouvellé ! Ce nouveau jeton expire le : ${new Date(claims.exp * 1e3).toISOString()}`))

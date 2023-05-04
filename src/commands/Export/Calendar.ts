@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { onTokenRefresh } from '../../functions/onTokenRefresh'
+import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefreshSilent'
 
 interface CommandOpts {
   uid: string | undefined
@@ -17,16 +17,18 @@ const getDateFromISO = (date: Date): string => new Date(date).toISOString().spli
 
 async function calendar (filePath: string, { uid, student, from, to, limit }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefresh)
-
-  const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
-  const ics = agenda.toICalendar()
   if (filePath !== undefined) {
+    const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
+    const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
+    const ics = agenda.toICalendar()
     console.log(chalk.gray(`UID : ${credentials.userId}`))
     writeFileSync(filePath, ics, { encoding: 'utf-8' })
     console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${(ics.match(/BEGIN:VEVENT/g) ?? []).length} évènements.`))
     return
   }
+  const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshSilent)
+  const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
+  const ics = agenda.toICalendar()
   console.log(ics)
 }
 
