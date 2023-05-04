@@ -19,35 +19,26 @@ const getDateFromISO = (date: Date): string => new Date(date).toISOString().spli
 
 async function calendar (filePath: string, { uid, student, from, to, limit, ext }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  if (filePath !== undefined) {
-    const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
-    const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
-    const ics = agenda.toICalendar()
-    console.log(chalk.gray(`UID : ${credentials.userId}`))
-
-    switch (ext) {
-      case 'ics':
-        writeFileSync(filePath, ics, { encoding: 'utf-8' })
-        console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${(ics.match(/BEGIN:VEVENT/g) ?? []).length} évènements.`))
-        break
-      case 'json':
-        writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
-        console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${agenda.reduce((acc: Lesson[], j) => [...acc, ...j.lessons], []).length} évènements.`))
-        break
-    }
-    return
-  }
-  const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshSilent)
+  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
   const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
   const ics = agenda.toICalendar()
 
-  switch (ext) {
-    case 'ics':
-      console.log(ics)
-      break
-    case 'json':
-      console.log(JSON.stringify(agenda, null, 2))
-      break
+  if (filePath !== undefined) {
+    console.log(chalk.gray(`UID : ${credentials.userId}`))
+    const eventLength = agenda.reduce((acc: Lesson[], j) => [...acc, ...j.lessons], []).length
+
+    if (ext === 'ics') {
+      writeFileSync(filePath, ics, { encoding: 'utf-8' })
+    } else {
+      writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
+    }
+    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
+    return
+  }
+  if (ext === 'ics') {
+    console.log(ics)
+  } else {
+    console.log(JSON.stringify(agenda, null, 2))
   }
 }
 
