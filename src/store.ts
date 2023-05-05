@@ -1,7 +1,7 @@
 import Conf from 'conf'
 import { AuthConfig } from 'scolengo-api/types/models/Common/Auth'
 
-interface StoredCredentials {
+export interface StoredCredentials {
   userId: string
   credentials: AuthConfig
 }

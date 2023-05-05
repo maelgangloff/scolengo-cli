@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefreshSilent'
+import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import { Lesson } from 'scolengo-api/types/models/Calendar'
 
 interface CommandOpts {

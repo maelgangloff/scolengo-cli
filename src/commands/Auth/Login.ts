@@ -4,7 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import { AuthConfig } from 'scolengo-api/types/models/Common/Auth'
 import { setCredentials } from '../../store'
 import chalk from 'chalk'
-import { onTokenRefreshVerbose } from '../../functions/onTokenRefreshSilent'
+import { onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 
 async function login (filePath: string): Promise<void> {
   if (!fs.existsSync(filePath)) throw new Error("Ce fichier n'existe pas.")

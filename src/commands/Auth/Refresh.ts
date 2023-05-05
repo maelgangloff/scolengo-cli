@@ -2,7 +2,7 @@ import { createCommand } from 'commander'
 import { getCredentials } from '../../store'
 import chalk from 'chalk'
 import { Skolengo, TokenSet } from 'scolengo-api'
-import { onTokenRefreshSilent } from '../../functions/onTokenRefreshSilent'
+import { onTokenRefreshSilent } from '../../functions/onTokenRefresh'
 
 async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)
