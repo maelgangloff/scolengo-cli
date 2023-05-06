@@ -104,3 +104,36 @@ Options:
   -e, --ext <file_format>     format des donnés (choices: "eml", "json", default: "eml")
   -h, --help                  display help for command
 ```
+
+#### Notes
+```
+Usage: scolengo export notes [options] [output-file]
+
+Exporter le relevé de notes
+
+Arguments:
+  output-file                  chemin vers le fichier à sauvegarder
+
+Options:
+  -u, --uid <user_uid>         identifiant unique de l'utilisateur courant
+  -s, --student <student_uid>  identifiant unique de l'étudiant à considérer
+  -n, --limit <event_number>   nombre maximum de notes à télécharger (default: "100")
+  -e, --ext <file_format>      format des donnés (choices: "csv", "json", default: "csv")
+  -h, --help                   display help for command
+```
+
+#### Bulletins
+```
+Usage: scolengo export bulletins [options] [output-file]
+
+Exporter les bulletins périodiques dans un zip au format PDF
+
+Arguments:
+  output-file                  chemin vers le fichier à sauvegarder
+
+Options:
+  -u, --uid <user_uid>         identifiant unique de l'utilisateur courant
+  -s, --student <student_uid>  identifiant unique de l'étudiant à considérer
+  -n, --limit <event_number>   nombre maximum de communications à télécharger (default: "100")
+  -h, --help                   display help for command
+```
