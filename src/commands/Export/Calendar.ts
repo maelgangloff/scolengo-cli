@@ -19,12 +19,14 @@ const getDateFromISO = (date: Date): string => new Date(date).toISOString().spli
 
 async function calendar (filePath: string, { uid, student, from, to, limit, ext }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
+  const studentId = student ?? credentials.userId
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
-  const agenda = await user.getAgenda(student ?? credentials.userId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
+  const agenda = await user.getAgenda(studentId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
   const ics = agenda.toICalendar()
 
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
+    console.log(chalk.gray(`Student UID : ${studentId}`))
     const eventLength = agenda.reduce((acc: Lesson[], j) => [...acc, ...j.lessons], []).length
 
     if (ext === 'ics') {
