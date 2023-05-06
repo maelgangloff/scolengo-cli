@@ -29,18 +29,24 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
     console.log(chalk.gray(`Student UID : ${studentId}`))
     const eventLength = agenda.reduce((acc: Lesson[], j) => [...acc, ...j.lessons], []).length
 
-    if (ext === 'ics') {
-      writeFileSync(filePath, ics, { encoding: 'utf-8' })
-    } else {
-      writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
+    switch (ext) {
+      case 'ics':
+        writeFileSync(filePath, ics, { encoding: 'utf-8' })
+        break
+      case 'json':
+        writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
     }
     console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
     return
   }
-  if (ext === 'ics') {
-    console.log(ics)
-  } else {
-    console.log(JSON.stringify(agenda, null, 2))
+
+  switch (ext) {
+    case 'ics':
+      console.log(ics)
+      break
+    case 'json':
+      console.log(JSON.stringify(agenda, null, 2))
+      break
   }
 }
 

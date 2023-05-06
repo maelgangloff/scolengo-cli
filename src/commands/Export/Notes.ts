@@ -32,29 +32,39 @@ async function notes (filePath: string, {
     matieres: await user.getEvaluation(studentId, period.id, limit !== undefined ? parseInt(limit, 10) : undefined)
   })))
 
+  const CSV_HEADERS = 'period,subject,dateTime,coefficient,scale,mark\n'
+  const csv = CSV_HEADERS + periods.map(p =>
+    p.matieres.map(m =>
+      m.evaluations.map(e =>
+        [p.label, m.subject.label, e.dateTime, Math.round(e.coefficient * 100) / 100, e.scale, e.evaluationResult.mark ?? e.evaluationResult.nonEvaluationReason]
+      )
+    )).flat(2)
+    .map(e => e.join(','))
+    .join('\n')
+
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
     console.log(chalk.gray(`Student UID : ${studentId}`))
 
-    if (ext === 'csv') {
-      const CSV_HEADERS = 'period,subject,dateTime,coefficient,scale,mark\n'
-      const csv = CSV_HEADERS + periods.map(p =>
-        p.matieres.map(m =>
-          m.evaluations.map(e =>
-            [p.label, m.subject.label, e.dateTime, Math.round(e.coefficient * 100) / 100, e.scale, e.evaluationResult.mark ?? e.evaluationResult.nonEvaluationReason]
-          )
-        )).flat(2)
-        .map(e => e.join(','))
-        .join('\n')
-
-      writeFileSync(filePath, csv, { encoding: 'utf-8' })
-    } else {
-      writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
+    switch (ext) {
+      case 'csv':
+        writeFileSync(filePath, csv, { encoding: 'utf-8' })
+        break
+      case 'json':
+        writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
+        break
     }
     console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
     return
   }
-  console.log(JSON.stringify(periods, null, 2))
+
+  switch (ext) {
+    case 'csv':
+      console.log(csv)
+      break
+    case 'json':
+      console.log(JSON.stringify(periods, null, 2))
+  }
 }
 
 export const NotesCommand = createCommand('notes')
