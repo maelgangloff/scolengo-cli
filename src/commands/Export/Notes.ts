@@ -64,6 +64,7 @@ async function notes (filePath: string, {
       break
     case 'json':
       console.log(JSON.stringify(periods, null, 2))
+      break
   }
 }
 

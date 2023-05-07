@@ -58,11 +58,11 @@ async function mail (filePath: string, {
           zip.file(fileName, content)
         }
       }
-      await zip.generateNodeStream({
+      zip.generateNodeStream({
         type: 'nodebuffer',
         streamFiles: true
       }).pipe(createWriteStream(filePath))
-    } else {
+    } else if (ext === 'json') {
       writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
     }
     console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications.`))

@@ -33,7 +33,7 @@ async function notes (filePath: string, {
     for (const bulletin of bulletins) {
       zip.file(bulletin.name ?? `${bulletin.id}.pdf`, (await user.downloadAttachment(bulletin)) as ReadStream)
     }
-    await zip.generateNodeStream({
+    zip.generateNodeStream({
       type: 'nodebuffer',
       streamFiles: true
     }).pipe(createWriteStream(filePath))
