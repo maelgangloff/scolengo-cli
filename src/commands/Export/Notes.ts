@@ -3,8 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { periodsToCSV, getEvaluation } from '../../functions'
+import { periodsToCSV, getEvaluation, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined

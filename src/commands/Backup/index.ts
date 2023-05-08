@@ -11,7 +11,8 @@ import {
   getCommunications,
   getEvaluation,
   onTokenRefreshVerbose,
-  periodsToCSV
+  periodsToCSV,
+  getDateFromISO
 } from '../../functions'
 
 enum ExportableData {
@@ -27,8 +28,6 @@ interface CommandOpts {
   student: string | undefined
   attachments: boolean
 }
-
-const getDateFromISO = (date: Date): string => new Date(date).toISOString().split('T')[0]
 
 async function backup (filePath: string, {
   uid,

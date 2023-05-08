@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
+import { getDateFromISO, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
 import { Lesson } from 'scolengo-api/types/models/Calendar'
 
 interface CommandOpts {
@@ -14,8 +14,6 @@ interface CommandOpts {
   to: string
   ext: 'ics' | 'json'
 }
-
-const getDateFromISO = (date: Date): string => new Date(date).toISOString().split('T')[0]
 
 async function calendar (filePath: string, {
   uid,

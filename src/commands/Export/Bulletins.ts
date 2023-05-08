@@ -3,8 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream } from 'fs'
-import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { attachmentsToZip } from '../../functions'
+import { attachmentsToZip, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {

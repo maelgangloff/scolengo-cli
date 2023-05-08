@@ -1,10 +1,9 @@
 import { createCommand, Option } from 'commander'
 import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
-import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getAbsencesFiles } from '../../functions'
+import { getAbsencesFiles, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined
