@@ -5,8 +5,7 @@ import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import { Communication } from 'scolengo-api/types/models/Messaging'
-import JSZip from 'jszip'
-import { participationToMIME } from '../../functions/participationToMIME'
+import { communicationsToZip } from '../../functions/communicationsToZip'
 
 interface CommandOpts {
   uid: string | undefined
@@ -14,8 +13,6 @@ interface CommandOpts {
   folder: string | undefined
   ext: 'eml' | 'json'
 }
-
-const escapeFileName = (name: string): string => name.replace(/[^a-z0-9]/gi, '_')
 
 async function mail (filePath: string, {
   uid,
@@ -38,32 +35,16 @@ async function mail (filePath: string, {
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
 
-    if (ext === 'eml') {
-      const zip = new JSZip()
-      for (const communication of communications) {
-        const subject = communication.communication.subject
-        const communicationId = communication.communication.id
-        const participations = communication.participations
-
-        for (let i = 0; i < participations.length; i++) {
-          const {
-            sender,
-            attachments,
-            id
-          } = participations[i]
-          const senderName = ((sender?.person) != null) ? `${sender.person.firstName} ${sender.person.lastName}` : sender?.technicalUser?.label
-          const fileName = `${communicationId}-${id}-${escapeFileName(senderName ?? 'Inconnu')}-${escapeFileName(subject)}.eml`
-          const contentMIME = participationToMIME(participations[i], subject, i !== 0 ? participations[0].id : undefined)
-          const content = attachments.length > 0 ? contentMIME + `<br>__________<br>Pièces jointes :<br>${attachments.map(a => `  - ${a.name ?? 'Inconnu'} (${a.mimeTypeLabel ?? 'Inconnu'}) : <a href="${a.url}">${a.url}</a>`).join('<br>')}` : contentMIME
-          zip.file(fileName, content)
-        }
-      }
-      zip.generateNodeStream({
-        type: 'nodebuffer',
-        streamFiles: true
-      }).pipe(createWriteStream(filePath))
-    } else if (ext === 'json') {
-      writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
+    switch (ext) {
+      case 'eml':
+        communicationsToZip(communications).generateNodeStream({
+          type: 'nodebuffer',
+          streamFiles: true
+        }).pipe(createWriteStream(filePath))
+        break
+      case 'json':
+        writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
+        break
     }
     console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications.`))
     return

@@ -4,12 +4,12 @@ import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
+import { periodsToCSV } from '../../functions/periodsToCSV'
 
 interface CommandOpts {
   uid: string | undefined
   student: string | undefined
   limit: string | undefined
-  folder: string | undefined
   ext: 'csv' | 'json'
 }
 
@@ -17,8 +17,7 @@ async function notes (filePath: string, {
   uid,
   student,
   limit,
-  ext,
-  folder
+  ext
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
@@ -32,23 +31,13 @@ async function notes (filePath: string, {
     matieres: await user.getEvaluation(studentId, period.id, limit !== undefined ? parseInt(limit, 10) : undefined)
   })))
 
-  const CSV_HEADERS = 'period,subject,dateTime,coefficient,scale,mark\n'
-  const csv = CSV_HEADERS + periods.map(p =>
-    p.matieres.map(m =>
-      m.evaluations.map(e =>
-        [p.label, m.subject.label, e.dateTime, Math.round(e.coefficient * 100) / 100, e.scale, e.evaluationResult.mark ?? e.evaluationResult.nonEvaluationReason]
-      )
-    )).flat(2)
-    .map(e => e.join(','))
-    .join('\n')
-
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
     console.log(chalk.gray(`Student UID : ${studentId}`))
 
     switch (ext) {
       case 'csv':
-        writeFileSync(filePath, csv, { encoding: 'utf-8' })
+        writeFileSync(filePath, periodsToCSV(periods), { encoding: 'utf-8' })
         break
       case 'json':
         writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
@@ -60,7 +49,7 @@ async function notes (filePath: string, {
 
   switch (ext) {
     case 'csv':
-      console.log(csv)
+      console.log(periodsToCSV(periods))
       break
     case 'json':
       console.log(JSON.stringify(periods, null, 2))

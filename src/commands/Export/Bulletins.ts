@@ -2,9 +2,9 @@ import { createCommand } from 'commander'
 import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
-import { ReadStream, createWriteStream } from 'fs'
+import { createWriteStream } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import JSZip from 'jszip'
+import { attachmentsToZip } from '../../functions/attachmentsToZip'
 
 interface CommandOpts {
   uid: string | undefined
@@ -28,11 +28,8 @@ async function notes (filePath: string, {
     console.log(chalk.gray(`Student UID : ${studentId}`))
 
     if (bulletins.length === 0) throw new Error("Aucun bulletin n'est disponible.")
+    const zip = await attachmentsToZip(user, bulletins)
 
-    const zip = new JSZip()
-    for (const bulletin of bulletins) {
-      zip.file(bulletin.name ?? `${bulletin.id}.pdf`, (await user.downloadAttachment(bulletin)) as ReadStream)
-    }
     zip.generateNodeStream({
       type: 'nodebuffer',
       streamFiles: true
