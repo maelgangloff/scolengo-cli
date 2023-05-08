@@ -12,13 +12,15 @@ interface CommandOpts {
   limit: string | undefined
   folder: string | undefined
   ext: 'eml' | 'json'
+  attachments: boolean
 }
 
 async function mail (filePath: string, {
   uid,
   limit,
   ext,
-  folder
+  folder,
+  attachments
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
@@ -27,24 +29,18 @@ async function mail (filePath: string, {
 
   if (inboxFolder === undefined) throw new Error('Impossible de trouver la boîte de réception du courriel.')
 
-  let inbox: Communication[]
-  if (limit !== undefined) {
-    inbox = await user.getCommunicationsFolder(inboxFolder.id, parseInt(limit, 10))
-  } else {
-    let offset = 0
-    const communications: Communication[] = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
+  let offset = 0
+  const boiteReception: Communication[] = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
 
-    let n = communications.length
-    while (n !== 0) {
-      const newCommunications = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
-      n = newCommunications.length
-      offset += n
-      communications.push(...newCommunications)
-    }
-    inbox = communications
+  let n = boiteReception.length
+  while (n !== 0 && (limit !== undefined ? parseInt(limit, 10) >= n : true)) {
+    const newCommunications = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
+    n = newCommunications.length
+    offset += n
+    boiteReception.push(...newCommunications)
   }
 
-  const communications = await Promise.all(inbox.filter((value: Communication, index: number, self: Communication[]) =>
+  const communications = await Promise.all(boiteReception.filter((value: Communication, index: number, self: Communication[]) =>
     index === self.findIndex((t: Communication) => t.id === value.id)).map(async (c: Communication) => ({
     communication: c,
     participations: await user.getCommunicationParticipations(c.id)
@@ -55,7 +51,7 @@ async function mail (filePath: string, {
 
     switch (ext) {
       case 'eml':
-        communicationsToZip(communications).generateNodeStream({
+        (await communicationsToZip(user, communications, attachments)).generateNodeStream({
           type: 'nodebuffer',
           streamFiles: true
         }).pipe(createWriteStream(filePath))
@@ -73,8 +69,9 @@ async function mail (filePath: string, {
 export const MailCommand = createCommand('mail')
   .description('Exporter les courriels internes dans un zip au format MIME')
   .option('-u, --uid <user_uid>', 'identifiant unique de l\'utilisateur courant')
-  .option('-n, --limit <event_number>', 'nombre maximum de communications à télécharger')
+  .option('-n, --limit <event_number>', 'nombre maximum de communications à télécharger (par tranche de 100)')
   .addOption(new Option('-f, --folder <folder_id>', 'dossier à considérer').default('INBOX').choices(['INBOX', 'SENT', 'DRAFTS', 'MODERATION', 'TRASH', 'PERSONAL']))
   .addOption(new Option('-e, --ext <file_format>', 'format des donnés').default('eml').choices(['eml', 'json']))
+  .option('-A, --no-attachments', 'ne pas télécharger les pièces jointes')
   .argument('[output-file]', 'chemin vers le fichier à sauvegarder')
   .action(mail)
