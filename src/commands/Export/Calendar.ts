@@ -22,7 +22,6 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
   const studentId = student ?? credentials.userId
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
   const agenda = await user.getAgenda(studentId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
-  const ics = agenda.toICalendar()
 
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
@@ -31,7 +30,7 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
 
     switch (ext) {
       case 'ics':
-        writeFileSync(filePath, ics, { encoding: 'utf-8' })
+        writeFileSync(filePath, agenda.toICalendar(), { encoding: 'utf-8' })
         break
       case 'json':
         writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
@@ -43,7 +42,7 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
 
   switch (ext) {
     case 'ics':
-      console.log(ics)
+      console.log(agenda.toICalendar())
       break
     case 'json':
       console.log(JSON.stringify(agenda, null, 2))
