@@ -25,9 +25,27 @@ async function mail (filePath: string, {
   const mailSettings = await user.getUsersMailSettings(credentials.userId)
   const inboxFolder = mailSettings.folders.find(f => f.type === folder)
 
-  if (inboxFolder === undefined) throw new Error('Impossible de touver la boîte de réception du courriel.')
-  const inbox = await user.getCommunicationsFolder(inboxFolder.id, limit !== undefined ? parseInt(limit, 10) : undefined)
-  const communications = await Promise.all(inbox.map(async (c: Communication) => ({
+  if (inboxFolder === undefined) throw new Error('Impossible de trouver la boîte de réception du courriel.')
+
+  let inbox: Communication[]
+  if (limit !== undefined) {
+    inbox = await user.getCommunicationsFolder(inboxFolder.id, parseInt(limit, 10))
+  } else {
+    let offset = 0
+    const communications: Communication[] = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
+
+    let n = communications.length
+    while (n !== 0) {
+      const newCommunications = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
+      n = newCommunications.length
+      offset += n
+      communications.push(...newCommunications)
+    }
+    inbox = communications
+  }
+
+  const communications = await Promise.all(inbox.filter((value: Communication, index: number, self: Communication[]) =>
+    index === self.findIndex((t: Communication) => t.id === value.id)).map(async (c: Communication) => ({
     communication: c,
     participations: await user.getCommunicationParticipations(c.id)
   })))
@@ -46,7 +64,7 @@ async function mail (filePath: string, {
         writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications.`))
+    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
     return
   }
   console.log(JSON.stringify(communications, null, 2))
@@ -55,7 +73,7 @@ async function mail (filePath: string, {
 export const MailCommand = createCommand('mail')
   .description('Exporter les courriels internes dans un zip au format MIME')
   .option('-u, --uid <user_uid>', 'identifiant unique de l\'utilisateur courant')
-  .option('-n, --limit <event_number>', 'nombre maximum de communications à télécharger', '100')
+  .option('-n, --limit <event_number>', 'nombre maximum de communications à télécharger')
   .addOption(new Option('-f, --folder <folder_id>', 'dossier à considérer').default('INBOX').choices(['INBOX', 'SENT', 'DRAFTS', 'MODERATION', 'TRASH', 'PERSONAL']))
   .addOption(new Option('-e, --ext <file_format>', 'format des donnés').default('eml').choices(['eml', 'json']))
   .argument('[output-file]', 'chemin vers le fichier à sauvegarder')

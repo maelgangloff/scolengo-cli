@@ -20,7 +20,7 @@ export function communicationsToZip (communications: Array<{ communication: Comm
       const fileName = `${communicationId}-${id}-${escapeFileName(senderName ?? 'Inconnu')}-${escapeFileName(subject)}.eml`
       const contentMIME = participationToMIME(participations[i], subject, i !== 0 ? participations[0].id : undefined)
       const content = attachments.length > 0 ? contentMIME + `<br>__________<br>Pièces jointes :<br>${attachments.map(a => `  - ${a.name ?? 'Inconnu'} (${a.mimeTypeLabel ?? 'Inconnu'}) : <a href="${a.url}">${a.url}</a>`).join('<br>')}` : contentMIME
-      zip.file(fileName, content)
+      zip.file(fileName, content, { date: new Date(participations[i].dateTime) })
     }
   }
   return zip
