@@ -30,7 +30,6 @@ async function notes (filePath: string, {
     if (bulletins.length === 0) throw new Error('Aucun bulletin n\'est disponible.')
 
     const zip = await attachmentsToZip(user, new JSZip(), bulletins)
-
     zip.generateNodeStream({
       type: 'nodebuffer',
       streamFiles: true

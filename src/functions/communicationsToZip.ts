@@ -2,13 +2,19 @@ import JSZip from 'jszip'
 import { participationToMIME } from './participationToMIME'
 import { Communication, Participation } from 'scolengo-api/types/models/Messaging'
 import { Skolengo } from 'scolengo-api'
+import cliProgress from 'cli-progress'
+import chalk from 'chalk'
 
 const escapeFileName = (name: string): string => name.replace(/[^a-z0-9]/gi, '_')
 export async function communicationsToZip (user: Skolengo, zip: JSZip, communications: Array<{ communication: Communication, participations: Participation[] }>, withAttachments: boolean = true): Promise<JSZip> {
+  const statusBar = new cliProgress.SingleBar({ clearOnComplete: true, format: `[${chalk.greenBright('{bar}')}] {percentage}% | ETA: {eta}s | {value}/{total} {communication}` }, cliProgress.Presets.rect)
+
+  statusBar.start(communications.length, 0)
   for (const communication of communications) {
     const subject = communication.communication.subject
     const communicationId = communication.communication.id
     const participations = communication.participations
+    statusBar.increment({ communication: subject })
 
     for (let i = 0; i < participations.length; i++) {
       const {
@@ -21,5 +27,6 @@ export async function communicationsToZip (user: Skolengo, zip: JSZip, communica
       zip.file(fileName, contentMIME, { date: new Date(participations[i].dateTime) })
     }
   }
+  statusBar.stop()
   return zip
 }

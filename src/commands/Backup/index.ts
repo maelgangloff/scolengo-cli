@@ -59,7 +59,8 @@ async function backup (filePath: string, {
         },
         {
           name: 'Bulletins PDF',
-          value: ExportableData.BULLETINS
+          value: ExportableData.BULLETINS,
+          disabled: permissions !== undefined && !permissions.includes('READ_EVALUATIONS')
         },
         {
           name: 'Agenda',
@@ -86,36 +87,41 @@ async function backup (filePath: string, {
   const zip = new JSZip()
 
   for (const exportableData of answers.exportList as ExportableData[]) {
-    if (exportableData === ExportableData.ABSENCES) {
-      const absences = await getAbsencesFiles(user, studentId)
-      const folder = zip.folder('absences') as JSZip
-      folder.file('absences.csv', absences.toCSV())
-      folder.file('absences.json', JSON.stringify(absences, null, 2))
-    } else if (exportableData === ExportableData.BULLETINS) {
-      const folder = zip.folder('bulletins') as JSZip
-      const bulletins = await user.getPeriodicReportsFiles(studentId, 100)
-      await attachmentsToZip(user, folder, bulletins)
-    } else if (exportableData === ExportableData.CALENDAR) {
-      const folder = zip.folder('calendar') as JSZip
-      const agenda = await user.getAgenda(studentId, getDateFromISO(new Date()), getDateFromISO(new Date(Date.now() + 90 * 24 * 60 * 60 * 1e3)))
-      folder.file('calendar.ics', agenda.toICalendar())
-      folder.file('calendar.json', JSON.stringify(agenda, null, 2))
-    } else if (exportableData === ExportableData.NOTES) {
-      const folder = zip.folder('notes') as JSZip
-      const notes = await getEvaluation(user, studentId)
-      folder.file('notes.csv', periodsToCSV(notes))
-      folder.file('notes.json', JSON.stringify(notes, null, 2))
-    } else if (exportableData === ExportableData.MAIL) {
-      const mailSettings = await user.getUsersMailSettings(credentials.userId)
-      for (const mailFolder of mailSettings.folders) {
-        const folder = (zip.folder('mail') as JSZip).folder(mailFolder.type) as JSZip
-        const communications = await getCommunications(user, mailFolder)
-        await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
-        folder.file('communications.json', JSON.stringify(communications, null, 2))
-        console.log(chalk.green(`✔ Messagerie / ${mailFolder.type} (${mailFolder.name})`))
+    try {
+      if (exportableData === ExportableData.ABSENCES) {
+        const absences = await getAbsencesFiles(user, studentId)
+        const folder = zip.folder('absences') as JSZip
+        folder.file('absences.csv', absences.toCSV())
+        folder.file('absences.json', JSON.stringify(absences, null, 2))
+      } else if (exportableData === ExportableData.BULLETINS) {
+        const folder = zip.folder('bulletins') as JSZip
+        const bulletins = await user.getPeriodicReportsFiles(studentId, 100)
+        await attachmentsToZip(user, folder, bulletins)
+      } else if (exportableData === ExportableData.CALENDAR) {
+        const folder = zip.folder('calendar') as JSZip
+        const agenda = await user.getAgenda(studentId, getDateFromISO(new Date()), getDateFromISO(new Date(Date.now() + 90 * 24 * 60 * 60 * 1e3)))
+        folder.file('calendar.ics', agenda.toICalendar())
+        folder.file('calendar.json', JSON.stringify(agenda, null, 2))
+      } else if (exportableData === ExportableData.NOTES) {
+        const folder = zip.folder('notes') as JSZip
+        const notes = await getEvaluation(user, studentId)
+        folder.file('notes.csv', periodsToCSV(notes))
+        folder.file('notes.json', JSON.stringify(notes, null, 2))
+      } else if (exportableData === ExportableData.MAIL) {
+        const mailSettings = await user.getUsersMailSettings(credentials.userId)
+        for (const mailFolder of mailSettings.folders) {
+          const folder = (zip.folder('mail') as JSZip).folder(mailFolder.type) as JSZip
+          const communications = await getCommunications(user, mailFolder)
+          await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
+          folder.file('communications.json', JSON.stringify(communications, null, 2))
+          console.log(chalk.green(`✔ MAIL / ${mailFolder.type} (${mailFolder.name})`))
+        }
       }
+      if (exportableData !== ExportableData.MAIL) console.log(chalk.green('✔ ' + ExportableData[exportableData]))
+    } catch (e) {
+      const err = e as Error
+      console.error(chalk.redBright(`✘ ${err.name} : ${err.message}`))
     }
-    console.log(chalk.green('✔ ' + ExportableData[exportableData]))
   }
 
   zip.generateNodeStream({
