@@ -69,7 +69,7 @@ Commands:
 ```
 
 ### Exporter des données
-#### Agenda
+#### Calendar
 ```
 Usage: scolengo export calendar [options] [output-file]
 
@@ -88,7 +88,7 @@ Options:
   -h, --help                   display help for command
 ```
 
-#### Courriel
+#### Mail
 ```
 Usage: scolengo export mail [options] [output-file]
 
@@ -135,5 +135,22 @@ Options:
   -u, --uid <user_uid>         identifiant unique de l'utilisateur courant
   -s, --student <student_uid>  identifiant unique de l'étudiant à considérer
   -n, --limit <event_number>   nombre maximum de communications à télécharger (default: "100")
+  -h, --help                   display help for command
+```
+
+#### Absences
+```
+Usage: scolengo export absences [options] [output-file]
+
+Exporter les absences
+
+Arguments:
+  output-file                  chemin vers le fichier à sauvegarder
+
+Options:
+  -u, --uid <user_uid>         identifiant unique de l'utilisateur courant
+  -s, --student <student_uid>  identifiant unique de l'étudiant à considérer
+  -n, --limit <event_number>   nombre maximum d'absences à télécharger (default: "100")
+  -e, --ext <file_format>      format des donnés (choices: "csv", "json", default: "csv")
   -h, --help                   display help for command
 ```

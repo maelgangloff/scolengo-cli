@@ -55,7 +55,7 @@ async function absences (filePath: string, {
 }
 
 export const AbsencesCommand = createCommand('absences')
-  .description('Exporter les absences au format CSV')
+  .description('Exporter les absences')
   .option('-u, --uid <user_uid>', 'identifiant unique de l\'utilisateur courant')
   .option('-s, --student <student_uid>', 'identifiant unique de l\'étudiant à considérer')
   .option('-n, --limit <event_number>', "nombre maximum d'absences à télécharger", '100')
