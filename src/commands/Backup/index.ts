@@ -5,13 +5,14 @@ import { createWriteStream } from 'fs'
 import chalk from 'chalk'
 import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
-import { onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { getAbsencesFiles } from '../../functions/getAbsencesFiles'
-import { attachmentsToZip } from '../../functions/attachmentsToZip'
-import { getEvaluation } from '../../functions/getEvaluation'
-import { periodsToCSV } from '../../functions/periodsToCSV'
-import { getCommunications } from '../../functions/getCommunications'
-import { communicationsToZip } from '../../functions/communicationsToZip'
+import {
+  attachmentsToZip, communicationsToZip,
+  getAbsencesFiles,
+  getCommunications,
+  getEvaluation,
+  onTokenRefreshVerbose,
+  periodsToCSV
+} from '../../functions'
 
 enum ExportableData {
   ABSENCES,

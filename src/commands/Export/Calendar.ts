@@ -17,7 +17,14 @@ interface CommandOpts {
 
 const getDateFromISO = (date: Date): string => new Date(date).toISOString().split('T')[0]
 
-async function calendar (filePath: string, { uid, student, from, to, limit, ext }: CommandOpts): Promise<void> {
+async function calendar (filePath: string, {
+  uid,
+  student,
+  from,
+  to,
+  limit,
+  ext
+}: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
@@ -51,10 +58,10 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
 }
 
 export const CalendarCommand = createCommand('calendar')
-  .description("Exporter l'agenda au format iCalendar (text/calendar)")
-  .option('-u, --uid <user_uid>', "identifiant unique de l'utilisateur courant")
-  .option('-s, --student <student_uid>', "identifiant unique de l'étudiant à considérer")
-  .option('-n, --limit <event_number>', "nombre maximum d'évènements à télécharger", '100')
+  .description('Exporter l\'agenda au format iCalendar (text/calendar)')
+  .option('-u, --uid <user_uid>', 'identifiant unique de l\'utilisateur courant')
+  .option('-s, --student <student_uid>', 'identifiant unique de l\'étudiant à considérer')
+  .option('-n, --limit <event_number>', 'nombre maximum d\'évènements à télécharger', '100')
   .addOption(new Option('-e, --ext <file_format>', 'format des donnés').default('ics').choices(['ics', 'json']))
   .requiredOption('-f, --from <from_date>', 'date de début YYYY-MM-DD')
   .requiredOption('-t, --to <to_date>', 'date de fin YYYY-MM-DD')

@@ -4,7 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getAbsencesFiles } from '../../functions/getAbsencesFiles'
+import { getAbsencesFiles } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined
@@ -55,7 +55,7 @@ export const AbsencesCommand = createCommand('absences')
   .description('Exporter les absences')
   .option('-u, --uid <user_uid>', 'identifiant unique de l\'utilisateur courant')
   .option('-s, --student <student_uid>', 'identifiant unique de l\'étudiant à considérer')
-  .option('-n, --limit <event_number>', "nombre maximum d'absences à télécharger", '100')
+  .option('-n, --limit <event_number>', 'nombre maximum d\'absences à télécharger', '100')
   .addOption(new Option('-e, --ext <file_format>', 'format des donnés').default('csv').choices(['csv', 'json']))
   .argument('[output-file]', 'chemin vers le fichier à sauvegarder')
   .action(absences)

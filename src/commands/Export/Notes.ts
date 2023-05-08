@@ -4,8 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { periodsToCSV } from '../../functions/periodsToCSV'
-import { getEvaluation } from '../../functions/getEvaluation'
+import { periodsToCSV, getEvaluation } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined

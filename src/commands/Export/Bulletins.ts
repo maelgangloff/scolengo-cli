@@ -4,7 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { attachmentsToZip } from '../../functions/attachmentsToZip'
+import { attachmentsToZip } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -28,7 +28,7 @@ async function notes (filePath: string, {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
     console.log(chalk.gray(`Student UID : ${studentId}`))
 
-    if (bulletins.length === 0) throw new Error("Aucun bulletin n'est disponible.")
+    if (bulletins.length === 0) throw new Error('Aucun bulletin n\'est disponible.')
 
     const zip = await attachmentsToZip(user, new JSZip(), bulletins)
 

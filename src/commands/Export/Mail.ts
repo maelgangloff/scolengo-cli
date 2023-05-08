@@ -4,8 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { communicationsToZip } from '../../functions/communicationsToZip'
-import { getCommunications } from '../../functions/getCommunications'
+import { communicationsToZip, getCommunications } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {
