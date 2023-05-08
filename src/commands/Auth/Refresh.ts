@@ -16,6 +16,6 @@ async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
 }
 
 export const RefreshCommand = createCommand('refresh')
-  .description("Forcer le renouvellement de l'access token")
+  .description("forcer le renouvellement de l'access token")
   .option('-u, --uid <user_uid>', "identifiant unique de l'utilisateur courant")
   .action(refresh)

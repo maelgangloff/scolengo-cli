@@ -13,6 +13,6 @@ async function logout ({ uid }: { uid: string | undefined }): Promise<void> {
 }
 
 export const LogoutCommand = createCommand('logout')
-  .description('Se déconnecter et révoquer le refresh token')
+  .description('se déconnecter et révoquer le refresh token')
   .option('-u, --uid <user_uid>', "identifiant unique de l'utilisateur à déconnecter")
   .action(logout)

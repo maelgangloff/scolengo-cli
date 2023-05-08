@@ -20,6 +20,6 @@ async function login (filePath: string): Promise<void> {
 }
 
 export const LoginCommand = createCommand('login')
-  .description("Se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token")
+  .description("se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token")
   .argument('<file>', 'le fichier contenant les jetons')
   .action(login)

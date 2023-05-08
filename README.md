@@ -44,7 +44,7 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  auth            Gérer l'authentification
+  auth            gérer l'authentification
   export          exporter des données
   help [command]  display help for command
 
@@ -60,11 +60,11 @@ Options:
   -h, --help         display help for command
 
 Commands:
-  login <file>       Se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token
-  logout [options]   Se déconnecter et révoquer le refresh token
-  clear              Supprimer toute la configuration de scolengo-cli
-  whoami [options]   Vérifier si l'utilisateur courant est correctement authentifié
-  refresh [options]  Forcer le renouvellement de l'access token
+  login <file>       se connecter à partir d'un fichier de configuration obtenu avec https://github.com/maelgangloff/scolengo-token
+  logout [options]   se déconnecter et révoquer le refresh token
+  clear              supprimer toute la configuration de scolengo-cli
+  whoami [options]   vérifier si l'utilisateur courant est correctement authentifié
+  refresh [options]  forcer le renouvellement de l'access token
   help [command]     display help for command
 ```
 

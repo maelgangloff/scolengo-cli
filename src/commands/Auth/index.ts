@@ -6,7 +6,7 @@ import { WhoamiCommand } from './Whoami'
 import { RefreshCommand } from './Refresh'
 
 export const AuthCommand = createCommand('auth')
-  .description("Gérer l'authentification")
+  .description("gérer l'authentification")
   .addCommand(LoginCommand)
   .addCommand(LogoutCommand)
   .addCommand(ClearCommand)
