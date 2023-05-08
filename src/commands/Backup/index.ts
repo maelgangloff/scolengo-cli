@@ -114,7 +114,7 @@ async function backup (filePath: string, {
           const communications = await getCommunications(user, mailFolder)
           await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
           folder.file('communications.json', JSON.stringify(communications, null, 2))
-          console.log(chalk.green(`✔ MAIL / ${mailFolder.type} (${mailFolder.name})`))
+          console.log(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
         }
       }
       if (exportableData !== ExportableData.MAIL) console.log(chalk.green('✔ ' + ExportableData[exportableData]))

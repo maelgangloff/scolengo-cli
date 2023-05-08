@@ -3,10 +3,11 @@ import { Participation } from 'scolengo-api/types/models/Messaging'
 import { Skolengo } from 'scolengo-api'
 import { ReadStream } from 'fs'
 import { Stream } from 'stream'
+import chalk from 'chalk'
 
 async function stream2buffer (stream: Stream): Promise<Buffer> {
-  return await new Promise < Buffer >((resolve, reject) => {
-    const _buf = Array < any >()
+  return await new Promise<Buffer>((resolve, reject) => {
+    const _buf = Array<any>()
 
     stream.on('data', chunk => _buf.push(chunk))
     stream.on('end', () => resolve(Buffer.concat(_buf)))
@@ -35,15 +36,20 @@ export async function participationToMIME (user: Skolengo, participation: Partic
   })
   if (withAttachments) {
     for (const attachment of participation.attachments) {
-      const data = (await user.downloadAttachment(attachment)) as ReadStream
+      try {
+        const data = (await user.downloadAttachment(attachment)) as ReadStream
 
-      msg.addAttachment({
-        contentType: attachment.mimeType,
-        filename: attachment.name,
-        inline: false,
-        encoding: 'base64',
-        data: (await stream2buffer(data)).toString('base64')
-      })
+        msg.addAttachment({
+          contentType: attachment.mimeType,
+          filename: attachment.name,
+          inline: false,
+          encoding: 'base64',
+          data: (await stream2buffer(data)).toString('base64')
+        })
+      } catch (e) {
+        const err = e as Error
+        console.error(chalk.redBright(`✘ ${err.name} : ${err.message}`))
+      }
     }
   }
   return msg.asRaw()
