@@ -1,6 +1,8 @@
 # scolengo-cli
 Une application console non-officielle permettant d'exporter ses données provenant de l'API Skolengo.
 
+![Interactive CLI](docs/interactive.gif)
+
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour télécharger ses propres données depuis le serveur API.
 
 ## Remarques importantes
