@@ -10,7 +10,7 @@ async function whoami ({ uid }: { uid: string | undefined }): Promise<void> {
   const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
   const userInfo = await user.getUserInfo()
   console.log(chalk.gray(`UID : ${userInfo.id}`))
-  console.log(chalk.greenBright(`Correctement authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
+  console.log(chalk.greenBright(`✔ Correctement authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
 }
 
 export const WhoamiCommand = createCommand('whoami')

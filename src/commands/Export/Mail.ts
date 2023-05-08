@@ -4,8 +4,9 @@ import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { Communication } from 'scolengo-api/types/models/Messaging'
 import { communicationsToZip } from '../../functions/communicationsToZip'
+import { getCommunications } from '../../functions/getCommunications'
+import JSZip from 'jszip'
 
 interface CommandOpts {
   uid: string | undefined
@@ -29,29 +30,14 @@ async function mail (filePath: string, {
 
   if (inboxFolder === undefined) throw new Error('Impossible de trouver la boîte de réception du courriel.')
 
-  let offset = 0
-  const boiteReception: Communication[] = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
-
-  let n = boiteReception.length
-  while (n !== 0 && (limit !== undefined ? parseInt(limit, 10) >= n : true)) {
-    const newCommunications = await user.getCommunicationsFolder(inboxFolder.id, 100, offset)
-    n = newCommunications.length
-    offset += n
-    boiteReception.push(...newCommunications)
-  }
-
-  const communications = await Promise.all(boiteReception.filter((value: Communication, index: number, self: Communication[]) =>
-    index === self.findIndex((t: Communication) => t.id === value.id)).map(async (c: Communication) => ({
-    communication: c,
-    participations: await user.getCommunicationParticipations(c.id)
-  })))
+  const communications = await getCommunications(user, inboxFolder, limit)
 
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
 
     switch (ext) {
       case 'eml':
-        (await communicationsToZip(user, communications, attachments)).generateNodeStream({
+        (await communicationsToZip(user, new JSZip(), communications, attachments)).generateNodeStream({
           type: 'nodebuffer',
           streamFiles: true
         }).pipe(createWriteStream(filePath))
@@ -60,7 +46,7 @@ async function mail (filePath: string, {
         writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
+    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
     return
   }
   console.log(JSON.stringify(communications, null, 2))

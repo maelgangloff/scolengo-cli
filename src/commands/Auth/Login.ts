@@ -16,7 +16,7 @@ async function login (filePath: string): Promise<void> {
   const userInfo = await user.getUserInfo()
   setCredentials(data, userInfo.id)
   console.log(chalk.yellowBright('Veuillez supprimer le fichier de configuration importé car il ne pourra bientôt plus être utilisé.'))
-  console.log(chalk.greenBright(`Félicitations, vous êtes authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
+  console.log(chalk.greenBright(`✔ Félicitations, vous êtes authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
 }
 
 export const LoginCommand = createCommand('login')

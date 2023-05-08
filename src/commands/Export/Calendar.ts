@@ -36,7 +36,7 @@ async function calendar (filePath: string, { uid, student, from, to, limit, ext 
         writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
+    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
     return
   }
 

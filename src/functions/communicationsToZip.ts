@@ -4,8 +4,7 @@ import { Communication, Participation } from 'scolengo-api/types/models/Messagin
 import { Skolengo } from 'scolengo-api'
 
 const escapeFileName = (name: string): string => name.replace(/[^a-z0-9]/gi, '_')
-export async function communicationsToZip (user: Skolengo, communications: Array<{ communication: Communication, participations: Participation[] }>, withAttachments: boolean = true): Promise<JSZip> {
-  const zip = new JSZip()
+export async function communicationsToZip (user: Skolengo, zip: JSZip, communications: Array<{ communication: Communication, participations: Participation[] }>, withAttachments: boolean = true): Promise<JSZip> {
   for (const communication of communications) {
     const subject = communication.communication.subject
     const communicationId = communication.communication.id

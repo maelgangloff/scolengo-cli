@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import { createWriteStream } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import { attachmentsToZip } from '../../functions/attachmentsToZip'
+import JSZip from 'jszip'
 
 interface CommandOpts {
   uid: string | undefined
@@ -28,14 +29,15 @@ async function notes (filePath: string, {
     console.log(chalk.gray(`Student UID : ${studentId}`))
 
     if (bulletins.length === 0) throw new Error("Aucun bulletin n'est disponible.")
-    const zip = await attachmentsToZip(user, bulletins)
+
+    const zip = await attachmentsToZip(user, new JSZip(), bulletins)
 
     zip.generateNodeStream({
       type: 'nodebuffer',
       streamFiles: true
     }).pipe(createWriteStream(filePath))
 
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
+    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
     return
   }
 

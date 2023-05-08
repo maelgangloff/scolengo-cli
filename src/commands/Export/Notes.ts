@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import { periodsToCSV } from '../../functions/periodsToCSV'
+import { getEvaluation } from '../../functions/getEvaluation'
 
 interface CommandOpts {
   uid: string | undefined
@@ -23,13 +24,7 @@ async function notes (filePath: string, {
   const studentId = student ?? credentials.userId
 
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
-  const evaluationSettings = await user.getEvaluationSettings(studentId, 100)
-  if (evaluationSettings.length === 0) throw new Error('Aucun service d\'évaluation n\'a été trouvé.')
-  if (!evaluationSettings[0].evaluationsDetailsAvailable) throw new Error('Le détail des notes n\'est pas disponible.')
-  const periods = await Promise.all(evaluationSettings[0].periods.map(async period => ({
-    ...period,
-    matieres: await user.getEvaluation(studentId, period.id, limit !== undefined ? parseInt(limit, 10) : undefined)
-  })))
+  const periods = await getEvaluation(user, studentId, limit)
 
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
@@ -43,7 +38,7 @@ async function notes (filePath: string, {
         writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
+    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
     return
   }
 

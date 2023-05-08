@@ -4,6 +4,7 @@ import { Skolengo } from 'scolengo-api'
 import { onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
+import { getAbsencesFiles } from '../../functions/getAbsencesFiles'
 
 interface CommandOpts {
   uid: string | undefined
@@ -22,12 +23,8 @@ async function absences (filePath: string, {
   const studentId = student ?? credentials.userId
 
   const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
-  const absencesFiles = (await user.getAbsenceFiles(studentId, limit !== undefined ? parseInt(limit, 10) : undefined, 0, {
-    fields: {
-      absenceFileState: 'creationDateTime,absenceStartDateTime,absenceEndDateTime,absenceType,absenceFileStatus,absenceReason,absenceRecurrence',
-      absenceReason: 'code,longLabel'
-    }
-  })).sort((a, b) => new Date(a.currentState.creationDateTime).getTime() - new Date(b.currentState.creationDateTime).getTime())
+  const absencesFiles = await getAbsencesFiles(user, studentId, limit)
+
   if (filePath !== undefined) {
     console.log(chalk.gray(`UID : ${credentials.userId}`))
     console.log(chalk.gray(`Student UID : ${studentId}`))
@@ -40,7 +37,7 @@ async function absences (filePath: string, {
         writeFileSync(filePath, JSON.stringify(absencesFiles, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`Le fichier a bien été sauvegardé. Il comporte ${absencesFiles.length} absences.`))
+    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${absencesFiles.length} absences.`))
     return
   }
 

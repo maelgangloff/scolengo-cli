@@ -1,6 +1,6 @@
 {
   "name": "scolengo-cli",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "types": "types/index.d.ts",
   "bin": {
     "scolengo": "./dist/src/index.js"
@@ -27,7 +27,7 @@
     "commander": "^10.0.1",
     "conf": "10.1.2",
     "figlet": "^1.6.0",
-    "inquirer": "^9.2.0",
+    "inquirer": "^8.2.5",
     "jszip": "^3.10.1",
     "mimetext": "^3.0.6",
     "scolengo-api": "^1.2.0",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@types/conf": "^3.0.0",
     "@types/figlet": "^1.5.6",
+    "@types/inquirer": "^8.2.6",
     "@types/jest": "^29.5.1",
     "@types/node": "^18.16.3",
     "@types/update-notifier": "^5.1.0",

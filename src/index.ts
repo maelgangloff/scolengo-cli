@@ -6,6 +6,7 @@ import chalk from 'chalk'
 import * as pkg from '../package.json'
 import { AuthCommand } from './commands/Auth'
 import { ExportCommand } from './commands/Export'
+import { BackupCommand } from './commands/Backup'
 
 updateNotifier({ pkg }).notify({
   message: `Mise à jour disponible :
@@ -25,7 +26,8 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .description("Exporter mes données accessibles depuis l'API Skolengo")
   .addCommand(AuthCommand)
   .addCommand(ExportCommand)
+  .addCommand(BackupCommand)
   .parseAsync().catch((e: Error) => {
-    console.error(chalk.redBright(`${e.name} : ${e.message}`))
+    console.error(chalk.redBright(`✘ ${e.name} : ${e.message}`))
     process.exit(1)
   })

@@ -12,7 +12,7 @@ async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
   onTokenRefreshSilent(newTokenSet)
   const claims = newTokenSet.claims()
   console.log(chalk.gray(`UID : ${claims.sub}`))
-  console.log(chalk.greenBright(`Le jeton a correctement été renouvellé ! Ce nouveau jeton expire le : ${new Date(claims.exp * 1e3).toISOString()}`))
+  console.log(chalk.greenBright(`✔ Le jeton a correctement été renouvellé ! Ce nouveau jeton expire le : ${new Date(claims.exp * 1e3).toISOString()}`))
 }
 
 export const RefreshCommand = createCommand('refresh')
