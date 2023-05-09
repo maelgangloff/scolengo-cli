@@ -1,5 +1,5 @@
 import { TokenSet } from 'scolengo-api'
-import { getCredentials, setCredentials, StoredCredentials } from '../store'
+import { getCredentials, setCredentials, StoredCredentials } from './store'
 import chalk from 'chalk'
 import { logger } from './Logger'
 

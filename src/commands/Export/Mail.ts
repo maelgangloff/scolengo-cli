@@ -1,9 +1,15 @@
 import { createCommand, Option } from 'commander'
-import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
-import { communicationsToZip, getCommunications, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
+import {
+  communicationsToZip,
+  getCommunications,
+  getCredentials,
+  logger,
+  onTokenRefreshSilent,
+  onTokenRefreshVerbose
+} from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {

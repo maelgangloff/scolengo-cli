@@ -1,9 +1,8 @@
 import { createCommand, Option } from 'commander'
-import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getDateFromISO, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
+import { getCredentials, getDateFromISO, logger, onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions'
 import { Lesson } from 'scolengo-api/types/models/Calendar'
 
 interface CommandOpts {

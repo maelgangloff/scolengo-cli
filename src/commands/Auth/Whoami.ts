@@ -1,9 +1,7 @@
 import { createCommand } from 'commander'
-import { getCredentials } from '../../store'
 import chalk from 'chalk'
 import { Skolengo } from 'scolengo-api'
-import { onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { logger } from '../../functions/Logger'
+import { getCredentials, logger, onTokenRefreshVerbose } from '../../functions'
 
 async function whoami ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)

@@ -1,9 +1,15 @@
 import { createCommand, Option } from 'commander'
-import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { periodsToCSV, getEvaluation, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
+import {
+  getCredentials,
+  getEvaluation,
+  logger,
+  onTokenRefreshSilent,
+  onTokenRefreshVerbose,
+  periodsToCSV
+} from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined

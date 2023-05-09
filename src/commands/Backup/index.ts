@@ -3,19 +3,19 @@ import inquirer from 'inquirer'
 import JSZip from 'jszip'
 import { createWriteStream } from 'fs'
 import chalk from 'chalk'
-import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import {
   attachmentsToZip,
   communicationsToZip,
   getAbsencesFiles,
   getCommunications,
+  getCredentials,
   getDateFromISO,
   getEvaluation,
+  logger,
   onTokenRefreshVerbose,
   periodsToCSV
 } from '../../functions'
-import { logger } from '../../functions/Logger'
 
 enum ExportableData {
   ABSENCES,

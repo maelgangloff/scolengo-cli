@@ -2,10 +2,8 @@ import { createCommand } from 'commander'
 import fs from 'node:fs'
 import { Skolengo } from 'scolengo-api'
 import { AuthConfig } from 'scolengo-api/types/models/Common/Auth'
-import { setCredentials } from '../../store'
 import chalk from 'chalk'
-import { onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
-import { logger } from '../../functions/Logger'
+import { logger, onTokenRefreshVerbose, setCredentials } from '../../functions'
 
 async function login (filePath: string): Promise<void> {
   if (!fs.existsSync(filePath)) throw new Error("Ce fichier n'existe pas.")
