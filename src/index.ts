@@ -28,7 +28,7 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .addCommand(AuthCommand)
   .addCommand(ExportCommand)
   .addCommand(BackupCommand)
-  .option('-q, --quiet', 'quiet', false)
+  .option('-q, --quiet', 'mode silencieux', false)
   .hook('preSubcommand', (main: Command) => {
     if (main.opts().quiet === true) setQuiet(true)
   })
