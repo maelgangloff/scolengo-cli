@@ -2,10 +2,13 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export function silentMode (): boolean {
-  return process.env.SCOLENGO_CLI_SILENT !== undefined
+let _quiet: boolean = false
+
+export function setQuiet (quiet: boolean): boolean {
+  _quiet = quiet
+  return quiet
 }
 
 export function logger (...message: any[]): void {
-  if (!silentMode()) console.warn(...message) // -> stderr logging
+  if (process.env.SCOLENGO_CLI_SILENT === undefined && !_quiet) console.warn(...message) // -> stderr logging
 }
