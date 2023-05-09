@@ -7,5 +7,5 @@ export function silentMode (): boolean {
 }
 
 export function logger (...message: any[]): void {
-  if (!silentMode()) console.log(...message)
+  if (!silentMode()) console.warn(...message) // -> stderr logging
 }
