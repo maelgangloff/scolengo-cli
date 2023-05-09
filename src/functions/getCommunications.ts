@@ -7,7 +7,7 @@ export async function getCommunications (user: Skolengo, folder: Folder, limit?:
 
   let n = boiteReception.length
   while (n !== 0 && (limit !== undefined ? parseInt(limit, 10) >= n : true)) {
-    const newCommunications = await user.getCommunicationsFolder(folder.id, 100, offset)
+    const newCommunications = await user.getCommunicationsFolder(folder.id, 100, offset, { include: '' })
     n = newCommunications.length
     offset += n
     boiteReception.push(...newCommunications)

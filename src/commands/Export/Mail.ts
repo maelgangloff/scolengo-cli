@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
-import { communicationsToZip, getCommunications, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
+import { communicationsToZip, getCommunications, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -31,7 +31,7 @@ async function mail (filePath: string, {
   const communications = await getCommunications(user, inboxFolder, limit)
 
   if (filePath !== undefined) {
-    console.log(chalk.gray(`UID : ${credentials.userId}`))
+    logger(chalk.gray(`UID : ${credentials.userId}`))
 
     switch (ext) {
       case 'eml':
@@ -44,7 +44,7 @@ async function mail (filePath: string, {
         writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
+    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
     return
   }
   console.log(JSON.stringify(communications, null, 2))

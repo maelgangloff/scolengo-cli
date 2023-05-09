@@ -15,6 +15,7 @@ import {
   onTokenRefreshVerbose,
   periodsToCSV
 } from '../../functions'
+import { logger } from '../../functions/Logger'
 
 enum ExportableData {
   ABSENCES,
@@ -36,11 +37,16 @@ async function backup (filePath: string, {
   attachments
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  const studentId = student ?? credentials.userId
 
   const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
   const userInfo = await user.getUserInfo()
+  if (student !== undefined && userInfo.students !== undefined && userInfo.students.find(s => s.id) === undefined) throw new Error('Vous ne disposez a priori pas des droits requis pour effectuer les requêtes concernant l\'UID de l\'étudiant renseigné.')
+  const studentId = student ?? credentials.userId
+
   const permissions = userInfo.permissions?.map(p => p.permittedOperations).flat(2)
+
+  logger(chalk.gray(`UID : ${credentials.userId}`))
+  logger(chalk.gray(`Student UID : ${studentId}`))
 
   const answers = await inquirer.prompt([
     {
@@ -114,10 +120,10 @@ async function backup (filePath: string, {
           const communications = await getCommunications(user, mailFolder)
           await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
           folder.file('communications.json', JSON.stringify(communications, null, 2))
-          console.log(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
+          logger(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
         }
       }
-      if (exportableData !== ExportableData.MAIL) console.log(chalk.green('✔ ' + ExportableData[exportableData]))
+      if (exportableData !== ExportableData.MAIL) logger(chalk.green('✔ ' + ExportableData[exportableData]))
     } catch (e) {
       const err = e as Error
       console.error(chalk.redBright(`✘ ${err.name} : ${err.message}`))
@@ -129,7 +135,7 @@ async function backup (filePath: string, {
     streamFiles: true
   }).pipe(createWriteStream(filePath))
 
-  console.log(chalk.greenBright('✔ Le fichier zip a bien été sauvegardé.'))
+  logger(chalk.greenBright('✔ Le fichier zip a bien été sauvegardé.'))
 }
 
 export const BackupCommand = createCommand('backup')

@@ -3,14 +3,15 @@ import { getCredentials } from '../../store'
 import chalk from 'chalk'
 import { Skolengo } from 'scolengo-api'
 import { onTokenRefreshVerbose } from '../../functions/onTokenRefresh'
+import { logger } from '../../functions/Logger'
 
 async function whoami ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)
 
   const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
   const userInfo = await user.getUserInfo()
-  console.log(chalk.gray(`UID : ${userInfo.id}`))
-  console.log(chalk.greenBright(`✔ Correctement authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
+  logger(chalk.gray(`UID : ${userInfo.id}`))
+  logger(chalk.greenBright(`✔ Correctement authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
 }
 
 export const WhoamiCommand = createCommand('whoami')

@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream } from 'fs'
-import { attachmentsToZip, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
+import { attachmentsToZip, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -24,8 +24,8 @@ async function notes (filePath: string, {
   const bulletins = await user.getPeriodicReportsFiles(studentId, limit !== undefined ? parseInt(limit, 10) : undefined)
 
   if (filePath !== undefined) {
-    console.log(chalk.gray(`UID : ${credentials.userId}`))
-    console.log(chalk.gray(`Student UID : ${studentId}`))
+    logger(chalk.gray(`UID : ${credentials.userId}`))
+    logger(chalk.gray(`Student UID : ${studentId}`))
 
     if (bulletins.length === 0) throw new Error('Aucun bulletin n\'est disponible.')
 
@@ -35,7 +35,7 @@ async function notes (filePath: string, {
       streamFiles: true
     }).pipe(createWriteStream(filePath))
 
-    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
+    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
     return
   }
 
