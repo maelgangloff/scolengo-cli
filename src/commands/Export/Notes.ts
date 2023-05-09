@@ -3,7 +3,7 @@ import { getCredentials } from '../../store'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { periodsToCSV, getEvaluation, onTokenRefreshVerbose, onTokenRefreshSilent } from '../../functions'
+import { periodsToCSV, getEvaluation, onTokenRefreshVerbose, onTokenRefreshSilent, logger } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined
@@ -25,8 +25,8 @@ async function notes (filePath: string, {
   const periods = await getEvaluation(user, studentId, limit)
 
   if (filePath !== undefined) {
-    console.log(chalk.gray(`UID : ${credentials.userId}`))
-    console.log(chalk.gray(`Student UID : ${studentId}`))
+    logger(chalk.gray(`UID : ${credentials.userId}`))
+    logger(chalk.gray(`Student UID : ${studentId}`))
 
     switch (ext) {
       case 'csv':
@@ -36,7 +36,7 @@ async function notes (filePath: string, {
         writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
         break
     }
-    console.log(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
+    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
     return
   }
 

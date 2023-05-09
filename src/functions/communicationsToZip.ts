@@ -13,7 +13,7 @@ export async function communicationsToZip (user: Skolengo, zip: JSZip, communica
   for (const communication of communications) {
     const subject = communication.communication.subject
     const communicationId = communication.communication.id
-    const participations = communication.participations
+    const { participations } = communication
 
     for (let i = 0; i < participations.length; i++) {
       const {
