@@ -9,7 +9,6 @@ interface CommandOpts {
   uid: string | undefined
   student: string | undefined
   limit: string | undefined
-  quiet: boolean
   ext: 'csv' | 'json'
 }
 
@@ -17,8 +16,7 @@ async function absences (filePath: string, {
   uid,
   student,
   limit,
-  ext,
-  quiet
+  ext
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
