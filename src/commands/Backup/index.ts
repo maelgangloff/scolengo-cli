@@ -40,7 +40,6 @@ async function backup (filePath: string, {
 
   const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
   const userInfo = await user.getUserInfo()
-  if (student !== undefined && userInfo.students !== undefined && userInfo.students.find(s => s.id) === undefined) throw new Error('Vous ne disposez a priori pas des droits requis pour effectuer les requêtes concernant l\'UID de l\'étudiant renseigné.')
   const studentId = student ?? credentials.userId
 
   const permissions = userInfo.permissions?.map(p => p.permittedOperations).flat(2)
