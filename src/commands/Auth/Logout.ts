@@ -8,8 +8,9 @@ async function logout ({ uid }: { uid: string | undefined }): Promise<void> {
   const oidClient = await Skolengo.getOIDClient(credentials.credentials.school)
   await oidClient.revoke(credentials.credentials.tokenSet.refresh_token as string)
   deleteCredentials(credentials.userId)
-  logger(chalk.gray(`UID : ${credentials.userId}`))
-  logger(chalk.greenBright('✔ La session de l\'utilisateur a bien été supprimée et le refresh token a été révoqué auprès du SSO.'))
+  const Logger = logger()
+  Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+  Logger.info(chalk.greenBright('✔ La session de l\'utilisateur a bien été supprimée et le refresh token a été révoqué auprès du SSO.'))
 }
 
 export const LogoutCommand = createCommand('logout')

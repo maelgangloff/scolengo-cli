@@ -1,9 +1,8 @@
 import { createCommand } from 'commander'
 import fs from 'node:fs'
-import { Skolengo } from 'scolengo-api'
 import { AuthConfig } from 'scolengo-api/types/models/Common/Auth'
 import chalk from 'chalk'
-import { logger, onTokenRefreshVerbose, setCredentials } from '../../functions'
+import { getSkolengoClient, logger, setCredentials } from '../../functions'
 
 async function login (filePath: string): Promise<void> {
   if (!fs.existsSync(filePath)) throw new Error("Ce fichier n'existe pas.")
@@ -11,11 +10,12 @@ async function login (filePath: string): Promise<void> {
   const data: AuthConfig = JSON.parse(fs.readFileSync(filePath).toString())
   if (data.school === undefined || data.tokenSet === undefined) throw new Error("Vérifier l'intégrité du fichier d'authentification.")
 
-  const user = await Skolengo.fromConfigObject(data, onTokenRefreshVerbose)
+  const user = await getSkolengoClient(data)
   const userInfo = await user.getUserInfo()
   setCredentials(data, userInfo.id)
-  logger(chalk.yellowBright('Veuillez supprimer le fichier de configuration importé car il ne pourra bientôt plus être utilisé.'))
-  logger(chalk.greenBright(`✔ Félicitations, vous êtes authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
+  const Logger = logger()
+  Logger.info(chalk.yellowBright('Veuillez supprimer le fichier de configuration importé car il ne pourra bientôt plus être utilisé.'))
+  Logger.info(chalk.greenBright(`✔ Félicitations, vous êtes authentifié en tant que ${userInfo.firstName} ${userInfo.lastName} !`))
 }
 
 export const LoginCommand = createCommand('login')

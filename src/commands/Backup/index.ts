@@ -3,7 +3,6 @@ import inquirer from 'inquirer'
 import JSZip from 'jszip'
 import { createWriteStream } from 'fs'
 import chalk from 'chalk'
-import { Skolengo } from 'scolengo-api'
 import {
   attachmentsToZip,
   communicationsToZip,
@@ -12,8 +11,8 @@ import {
   getCredentials,
   getDateFromISO,
   getEvaluation,
+  getSkolengoClient,
   logger,
-  onTokenRefreshVerbose,
   periodsToCSV
 } from '../../functions'
 
@@ -38,14 +37,16 @@ async function backup (filePath: string, {
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
 
-  const user = await Skolengo.fromConfigObject(credentials.credentials, onTokenRefreshVerbose)
+  const user = await getSkolengoClient(credentials.credentials)
   const userInfo = await user.getUserInfo()
   const studentId = student ?? credentials.userId
 
   const permissions = userInfo.permissions?.map(p => p.permittedOperations).flat(2)
 
-  logger(chalk.gray(`UID : ${credentials.userId}`))
-  logger(chalk.gray(`Student UID : ${studentId}`))
+  const Logger = logger()
+
+  Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+  Logger.info(chalk.gray(`Student UID : ${studentId}`))
 
   const answers = await inquirer.prompt([
     {
@@ -119,10 +120,10 @@ async function backup (filePath: string, {
           const communications = await getCommunications(user, mailFolder)
           await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
           folder.file('communications.json', JSON.stringify(communications, null, 2))
-          logger(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
+          Logger.info(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
         }
       }
-      if (exportableData !== ExportableData.MAIL) logger(chalk.green('✔ ' + ExportableData[exportableData]))
+      if (exportableData !== ExportableData.MAIL) Logger.info(chalk.green('✔ ' + ExportableData[exportableData]))
     } catch (e) {
       const err = e as Error
       console.error(chalk.redBright(`✘ ${err.name} : ${err.message}`))
@@ -134,7 +135,7 @@ async function backup (filePath: string, {
     streamFiles: true
   }).pipe(createWriteStream(filePath))
 
-  logger(chalk.greenBright('✔ Le fichier zip a bien été sauvegardé.'))
+  Logger.info(chalk.greenBright('✔ Le fichier zip a bien été sauvegardé.'))
 }
 
 export const BackupCommand = createCommand('backup')
