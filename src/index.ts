@@ -7,7 +7,7 @@ import * as pkg from '../package.json'
 import { AuthCommand } from './commands/Auth'
 import { ExportCommand } from './commands/Export'
 import { BackupCommand } from './commands/Backup'
-import { setQuiet } from './functions'
+import { logger, setLogLevel } from './functions'
 
 updateNotifier({ pkg }).notify({
   message: `Mise à jour disponible :
@@ -28,11 +28,12 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .addCommand(AuthCommand)
   .addCommand(ExportCommand)
   .addCommand(BackupCommand)
-  .option('-q, --quiet', 'mode silencieux', false)
+  .option('-l, --logLevel [error|info|http]', 'niveau de log', 'info')
   .hook('preSubcommand', (main: Command) => {
-    if (main.opts().quiet === true) setQuiet(true)
+    const opts = main.opts()
+    setLogLevel(opts.logLevel)
   })
   .parseAsync().catch((e: Error) => {
-    console.error(chalk.redBright(`✘ ${e.name} : ${e.message}`))
+    logger().error((`✘ ${e.name} : ${e.message}`))
     process.exit(1)
   })

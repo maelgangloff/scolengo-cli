@@ -1,8 +1,7 @@
 import { createCommand, Option } from 'commander'
-import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getCredentials, getDateFromISO, logger, onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions'
+import { getCredentials, getDateFromISO, getSkolengoClient, logger } from '../../functions'
 import { Lesson } from 'scolengo-api/types/models/Calendar'
 
 interface CommandOpts {
@@ -24,12 +23,13 @@ async function calendar (filePath: string, {
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
-  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
+  const user = await getSkolengoClient(credentials.credentials)
   const agenda = await user.getAgenda(studentId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
 
   if (filePath !== undefined) {
-    logger(chalk.gray(`UID : ${credentials.userId}`))
-    logger(chalk.gray(`Student UID : ${studentId}`))
+    const Logger = logger()
+    Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+    Logger.info(chalk.gray(`Student UID : ${studentId}`))
     const eventLength = agenda.reduce((acc: Lesson[], j) => [...acc, ...j.lessons], []).length
 
     switch (ext) {
@@ -40,7 +40,7 @@ async function calendar (filePath: string, {
         writeFileSync(filePath, JSON.stringify(agenda, null, 2), { encoding: 'utf-8' })
         break
     }
-    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
+    Logger.info(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${eventLength} évènements.`))
     return
   }
 

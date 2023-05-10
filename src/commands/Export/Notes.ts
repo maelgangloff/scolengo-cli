@@ -1,13 +1,11 @@
 import { createCommand, Option } from 'commander'
-import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import {
   getCredentials,
   getEvaluation,
+  getSkolengoClient,
   logger,
-  onTokenRefreshSilent,
-  onTokenRefreshVerbose,
   periodsToCSV
 } from '../../functions'
 
@@ -27,12 +25,14 @@ async function notes (filePath: string, {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
 
-  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
+  const Logger = logger()
+
+  const user = await getSkolengoClient(credentials.credentials)
   const periods = await getEvaluation(user, studentId, limit)
 
   if (filePath !== undefined) {
-    logger(chalk.gray(`UID : ${credentials.userId}`))
-    logger(chalk.gray(`Student UID : ${studentId}`))
+    Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+    Logger.info(chalk.gray(`Student UID : ${studentId}`))
 
     switch (ext) {
       case 'csv':
@@ -42,7 +42,7 @@ async function notes (filePath: string, {
         writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
         break
     }
-    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
+    Logger.info(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${periods.length} périodes de notation pour ${periods.reduce((acc, p) => acc + p.matieres.reduce((acc, m) => acc + m.evaluations.length, 0), 0)} évaluations.`))
     return
   }
 

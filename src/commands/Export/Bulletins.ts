@@ -1,8 +1,7 @@
 import { createCommand } from 'commander'
-import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream } from 'fs'
-import { attachmentsToZip, getCredentials, logger, onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions'
+import { attachmentsToZip, getCredentials, getSkolengoClient, logger } from '../../functions'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -19,12 +18,13 @@ async function notes (filePath: string, {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
 
-  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
+  const user = await getSkolengoClient(credentials.credentials)
   const bulletins = await user.getPeriodicReportsFiles(studentId, limit !== undefined ? parseInt(limit, 10) : undefined)
 
   if (filePath !== undefined) {
-    logger(chalk.gray(`UID : ${credentials.userId}`))
-    logger(chalk.gray(`Student UID : ${studentId}`))
+    const Logger = logger()
+    Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+    Logger.info(chalk.gray(`Student UID : ${studentId}`))
 
     if (bulletins.length === 0) throw new Error('Aucun bulletin n\'est disponible.')
 
@@ -34,7 +34,7 @@ async function notes (filePath: string, {
       streamFiles: true
     }).pipe(createWriteStream(filePath))
 
-    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
+    Logger.info(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${bulletins.length} bulletins.`))
     return
   }
 

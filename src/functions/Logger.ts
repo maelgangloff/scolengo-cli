@@ -1,14 +1,25 @@
 import dotenv from 'dotenv'
+import winston from 'winston'
 
 dotenv.config()
 
-let _quiet: boolean = false
+let _logLevel: string = 'info'
 
-export function setQuiet (quiet: boolean): boolean {
-  _quiet = quiet
-  return quiet
+export function setLogLevel (logLevel: string): string {
+  _logLevel = logLevel
+  return logLevel
 }
 
-export function logger (...message: any[]): void {
-  if (process.env.SCOLENGO_CLI_SILENT === undefined && !_quiet) console.warn(...message) // -> stderr logging
+export function logger (): winston.Logger {
+  const logger = winston.createLogger({
+    level: process.env.SCOLENGO_CLI_SILENT === undefined ? _logLevel : 'error',
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.Console({
+        format: winston.format.simple(),
+        stderrLevels: ['error', 'info', 'http']
+      })
+    ]
+  })
+  return logger
 }

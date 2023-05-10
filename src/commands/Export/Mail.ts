@@ -1,14 +1,12 @@
 import { createCommand, Option } from 'commander'
-import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
 import {
   communicationsToZip,
   getCommunications,
   getCredentials,
-  logger,
-  onTokenRefreshSilent,
-  onTokenRefreshVerbose
+  getSkolengoClient,
+  logger
 } from '../../functions'
 import JSZip from 'jszip'
 
@@ -28,7 +26,7 @@ async function mail (filePath: string, {
   attachments
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
+  const user = await getSkolengoClient(credentials.credentials)
   const mailSettings = await user.getUsersMailSettings(credentials.userId)
   const inboxFolder = mailSettings.folders.find(f => f.type === folder)
 
@@ -37,7 +35,8 @@ async function mail (filePath: string, {
   const communications = await getCommunications(user, inboxFolder, limit)
 
   if (filePath !== undefined) {
-    logger(chalk.gray(`UID : ${credentials.userId}`))
+    const Logger = logger()
+    Logger.info(chalk.gray(`UID : ${credentials.userId}`))
 
     switch (ext) {
       case 'eml':
@@ -50,7 +49,7 @@ async function mail (filePath: string, {
         writeFileSync(filePath, JSON.stringify(communications, null, 2), { encoding: 'utf-8' })
         break
     }
-    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
+    Logger.info(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${communications.length} communications et ${communications.reduce((acc, c) => acc + c.participations.length, 0)} participations associées.`))
     return
   }
   console.log(JSON.stringify(communications, null, 2))

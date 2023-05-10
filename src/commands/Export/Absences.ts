@@ -1,8 +1,7 @@
 import { createCommand, Option } from 'commander'
-import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getAbsencesFiles, getCredentials, logger, onTokenRefreshSilent, onTokenRefreshVerbose } from '../../functions'
+import { getAbsencesFiles, getCredentials, getSkolengoClient, logger } from '../../functions'
 
 interface CommandOpts {
   uid: string | undefined
@@ -20,12 +19,13 @@ async function absences (filePath: string, {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
 
-  const user = await Skolengo.fromConfigObject(credentials.credentials, filePath !== undefined ? onTokenRefreshVerbose : onTokenRefreshSilent)
+  const user = await getSkolengoClient(credentials.credentials)
   const absencesFiles = await getAbsencesFiles(user, studentId, limit)
 
   if (filePath !== undefined) {
-    logger(chalk.gray(`UID : ${credentials.userId}`))
-    logger(chalk.gray(`Student UID : ${studentId}`))
+    const Logger = logger()
+    Logger.info(chalk.gray(`UID : ${credentials.userId}`))
+    Logger.info(chalk.gray(`Student UID : ${studentId}`))
 
     switch (ext) {
       case 'csv':
@@ -35,7 +35,7 @@ async function absences (filePath: string, {
         writeFileSync(filePath, JSON.stringify(absencesFiles, null, 2), { encoding: 'utf-8' })
         break
     }
-    logger(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${absencesFiles.length} absences.`))
+    Logger.info(chalk.greenBright(`✔ Le fichier a bien été sauvegardé. Il comporte ${absencesFiles.length} absences.`))
     return
   }
 
