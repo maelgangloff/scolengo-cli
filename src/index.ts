@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import figlet from 'figlet'
 import updateNotifier from 'update-notifier'
 import chalk from 'chalk'
 import * as pkg from '../package.json'
@@ -19,7 +18,13 @@ const program = new Command('scolengo')
 
 program
   .version(pkg.version)
-  .addHelpText('before', figlet.textSync(pkg.name) + '\n')
+  .addHelpText('before', `                _                                   _ _ 
+  ___  ___ ___ | | ___ _ __   __ _  ___         ___| (_)
+ / __|/ __/ _ \\| |/ _ \\ '_ \\ / _\` |/ _ \\ _____ / __| | |
+ \\__ \\ (_| (_) | |  __/ | | | (_| | (_) |_____| (__| | |
+ |___/\\___\\___/|_|\\___|_| |_|\\__, |\\___/       \\___|_|_|
+                             |___/                      
+`)
   .addHelpText('before', chalk.yellowBright(`Avertissement : Cet utilitaire n'est pas édité par Skolengo et n'est en aucun cas lié à cette marque.
 Il s'agit d'une application non-officielle, Open Source et distribué sous licence GNU GPLv3.
 Le dépôt git est accessible en suivant ce lien : https://github.com/maelgangloff/scolengo-cli
