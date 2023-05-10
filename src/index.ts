@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { Command } from 'commander'
+import { Command, Option } from 'commander'
 import updateNotifier from 'update-notifier'
 import chalk from 'chalk'
 import * as pkg from '../package.json'
@@ -33,7 +33,7 @@ Le dépôt git est accessible en suivant ce lien : https://github.com/maelganglo
   .addCommand(AuthCommand)
   .addCommand(ExportCommand)
   .addCommand(BackupCommand)
-  .option('-l, --logLevel [error|info|http]', 'niveau de log', 'info')
+  .addOption(new Option('-l, --logLevel [verbose|info|error]', 'niveau de log').default('info').choices(['verbose', 'info', 'error']))
   .hook('preSubcommand', (main: Command) => {
     const opts = main.opts()
     setLogLevel(opts.logLevel)

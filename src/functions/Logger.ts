@@ -1,25 +1,23 @@
 import dotenv from 'dotenv'
-import winston from 'winston'
+import { format, transports, createLogger, Logger } from 'winston'
 
 dotenv.config()
 
 let _logLevel: string = 'info'
 
-export function setLogLevel (logLevel: string): string {
+export function setLogLevel (logLevel: string): void {
   _logLevel = logLevel
-  return logLevel
 }
 
-export function logger (): winston.Logger {
-  const logger = winston.createLogger({
+export function logger (): Logger {
+  return createLogger({
     level: process.env.SCOLENGO_CLI_SILENT === undefined ? _logLevel : 'error',
-    format: winston.format.json(),
     transports: [
-      new winston.transports.Console({
-        format: winston.format.simple(),
-        stderrLevels: ['error', 'info', 'http']
+      new transports.Console({
+        eol: '\n',
+        format: format.cli(),
+        stderrLevels: ['error', 'info', 'verbose']
       })
     ]
   })
-  return logger
 }
