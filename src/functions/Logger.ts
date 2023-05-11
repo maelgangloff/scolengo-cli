@@ -16,7 +16,7 @@ export function logger (): Logger {
       new transports.Console({
         eol: '\n',
         format: format.cli(),
-        stderrLevels: ['error', 'info', 'verbose']
+        stderrLevels: ['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly']
       })
     ]
   })
