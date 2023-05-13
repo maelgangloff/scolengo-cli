@@ -14,5 +14,5 @@ export async function getSkolengoClient (credentials: AuthConfig): Promise<Skole
     return res
   })
 
-  return await Skolengo.fromConfigObject(credentials, onTokenRefresh, httpClient)
+  return await Skolengo.fromConfigObject(credentials, { httpClient, onTokenRefresh, handlePronoteError: true })
 }
