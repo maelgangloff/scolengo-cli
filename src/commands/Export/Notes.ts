@@ -3,11 +3,8 @@ import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import {
   getCredentials,
-  getEvaluation,
-  getSkolengoClient,
-  logger,
-  periodsToCSV
-} from '../../functions'
+  logger, SkolengoUser
+} from '../../SkolengoUser'
 
 interface CommandOpts {
   uid: string | undefined
@@ -27,8 +24,8 @@ async function notes (filePath: string, {
 
   const Logger = logger()
 
-  const user = await getSkolengoClient(credentials.credentials)
-  const periods = await getEvaluation(user, studentId, limit)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
+  const periods = await user.getEvaluationPeriods(studentId, limit)
 
   if (filePath !== undefined) {
     Logger.info(chalk.gray(`UID : ${credentials.userId}`))
@@ -36,7 +33,7 @@ async function notes (filePath: string, {
 
     switch (ext) {
       case 'csv':
-        writeFileSync(filePath, periodsToCSV(periods), { encoding: 'utf-8' })
+        writeFileSync(filePath, SkolengoUser.periodsToCSV(periods), { encoding: 'utf-8' })
         break
       case 'json':
         writeFileSync(filePath, JSON.stringify(periods, null, 2), { encoding: 'utf-8' })
@@ -48,7 +45,7 @@ async function notes (filePath: string, {
 
   switch (ext) {
     case 'csv':
-      console.log(periodsToCSV(periods))
+      console.log(SkolengoUser.periodsToCSV(periods))
       break
     case 'json':
       console.log(JSON.stringify(periods, null, 2))

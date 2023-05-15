@@ -4,17 +4,10 @@ import JSZip from 'jszip'
 import { createWriteStream } from 'fs'
 import chalk from 'chalk'
 import {
-  attachmentsToZip,
-  communicationsToZip,
-  getAbsencesFiles,
-  getCommunications,
   getCredentials,
   getDateFromISO,
-  getEvaluation,
-  getSkolengoClient,
-  logger,
-  periodsToCSV
-} from '../../functions'
+  logger, SkolengoUser
+} from '../../SkolengoUser'
 
 enum ExportableData {
   ABSENCES,
@@ -37,7 +30,7 @@ async function backup (filePath: string, {
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
 
-  const user = await getSkolengoClient(credentials.credentials)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
   const userInfo = await user.getUserInfo()
   const studentId = student ?? credentials.userId
 
@@ -95,14 +88,14 @@ async function backup (filePath: string, {
   for (const exportableData of answers.exportList as ExportableData[]) {
     try {
       if (exportableData === ExportableData.ABSENCES) {
-        const absences = await getAbsencesFiles(user, studentId)
+        const absences = await user.getAbsenceFiles(studentId)
         const folder = zip.folder('absences') as JSZip
         folder.file('absences.csv', absences.toCSV())
         folder.file('absences.json', JSON.stringify(absences, null, 2))
       } else if (exportableData === ExportableData.BULLETINS) {
         const folder = zip.folder('bulletins') as JSZip
         const bulletins = await user.getPeriodicReportsFiles(studentId, 100)
-        await attachmentsToZip(user, folder, bulletins)
+        await user.attachmentsToZip(folder, bulletins)
       } else if (exportableData === ExportableData.CALENDAR) {
         const folder = zip.folder('calendar') as JSZip
         const agenda = await user.getAgenda(studentId, getDateFromISO(new Date()), getDateFromISO(new Date(Date.now() + 90 * 24 * 60 * 60 * 1e3)))
@@ -110,15 +103,15 @@ async function backup (filePath: string, {
         folder.file('calendar.json', JSON.stringify(agenda, null, 2))
       } else if (exportableData === ExportableData.NOTES) {
         const folder = zip.folder('notes') as JSZip
-        const notes = await getEvaluation(user, studentId)
-        folder.file('notes.csv', periodsToCSV(notes))
+        const notes = await user.getEvaluationPeriods(studentId)
+        folder.file('notes.csv', SkolengoUser.periodsToCSV(notes))
         folder.file('notes.json', JSON.stringify(notes, null, 2))
       } else if (exportableData === ExportableData.MAIL) {
         const mailSettings = await user.getUsersMailSettings(credentials.userId)
         for (const mailFolder of mailSettings.folders) {
           const folder = (zip.folder('mail') as JSZip).folder(mailFolder.type) as JSZip
-          const communications = await getCommunications(user, mailFolder)
-          await communicationsToZip(user, folder.folder('eml') as JSZip, communications, attachments)
+          const communications = await user.getCommunications(mailFolder)
+          await user.communicationsToZip(folder.folder('eml') as JSZip, communications, attachments)
           folder.file('communications.json', JSON.stringify(communications, null, 2))
           Logger.info(chalk.green(`✔ MAIL > ${mailFolder.type} (${mailFolder.name})`))
         }

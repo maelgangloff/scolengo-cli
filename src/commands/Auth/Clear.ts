@@ -1,6 +1,6 @@
 import { createCommand } from 'commander'
 import chalk from 'chalk'
-import { clearCredentials, logger } from '../../functions'
+import { clearCredentials, logger } from '../../SkolengoUser'
 
 async function clear (): Promise<void> {
   clearCredentials()

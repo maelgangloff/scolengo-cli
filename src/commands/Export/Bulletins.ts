@@ -1,7 +1,7 @@
 import { createCommand } from 'commander'
 import chalk from 'chalk'
 import { createWriteStream } from 'fs'
-import { attachmentsToZip, getCredentials, getSkolengoClient, logger } from '../../functions'
+import { getCredentials, logger, SkolengoUser } from '../../SkolengoUser'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -18,7 +18,7 @@ async function notes (filePath: string, {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
 
-  const user = await getSkolengoClient(credentials.credentials)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
   const bulletins = await user.getPeriodicReportsFiles(studentId, limit !== undefined ? parseInt(limit, 10) : undefined)
 
   if (filePath !== undefined) {
@@ -28,7 +28,7 @@ async function notes (filePath: string, {
 
     if (bulletins.length === 0) throw new Error('Aucun bulletin n\'est disponible.')
 
-    const zip = await attachmentsToZip(user, new JSZip(), bulletins)
+    const zip = await user.attachmentsToZip(new JSZip(), bulletins)
     zip.generateNodeStream({
       type: 'nodebuffer',
       streamFiles: true

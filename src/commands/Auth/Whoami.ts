@@ -1,11 +1,11 @@
 import { createCommand } from 'commander'
 import chalk from 'chalk'
-import { getCredentials, getSkolengoClient, logger } from '../../functions'
+import { getCredentials, logger, SkolengoUser } from '../../SkolengoUser'
 
 async function whoami ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)
 
-  const user = await getSkolengoClient(credentials.credentials)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
   const userInfo = await user.getUserInfo()
   const Logger = logger()
   Logger.info(chalk.gray(`UID : ${userInfo.id}`))

@@ -6,7 +6,7 @@ import * as pkg from '../package.json'
 import { AuthCommand } from './commands/Auth'
 import { ExportCommand } from './commands/Export'
 import { BackupCommand } from './commands/Backup'
-import { logger, setLogLevel } from './functions'
+import { logger, setLogLevel } from './SkolengoUser'
 
 updateNotifier({ pkg }).notify({
   message: `Mise à jour disponible :

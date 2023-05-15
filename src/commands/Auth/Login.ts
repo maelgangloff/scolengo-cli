@@ -2,7 +2,7 @@ import { createCommand } from 'commander'
 import fs from 'node:fs'
 import { AuthConfig } from 'scolengo-api/types/models/Common/Auth'
 import chalk from 'chalk'
-import { getSkolengoClient, logger, setCredentials } from '../../functions'
+import { logger, setCredentials, SkolengoUser } from '../../SkolengoUser'
 
 async function login (filePath: string): Promise<void> {
   if (!fs.existsSync(filePath)) throw new Error("Ce fichier n'existe pas.")
@@ -10,7 +10,7 @@ async function login (filePath: string): Promise<void> {
   const data: AuthConfig = JSON.parse(fs.readFileSync(filePath).toString())
   if (data.school === undefined || data.tokenSet === undefined) throw new Error("Vérifier l'intégrité du fichier d'authentification.")
 
-  const user = await getSkolengoClient(data)
+  const user = await SkolengoUser.getSkolengoUser(data)
   const userInfo = await user.getUserInfo()
   setCredentials(data, userInfo.id)
   const Logger = logger()

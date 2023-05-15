@@ -2,12 +2,9 @@ import { createCommand, Option } from 'commander'
 import chalk from 'chalk'
 import { createWriteStream, writeFileSync } from 'fs'
 import {
-  communicationsToZip,
-  getCommunications,
   getCredentials,
-  getSkolengoClient,
-  logger
-} from '../../functions'
+  logger, SkolengoUser
+} from '../../SkolengoUser'
 import JSZip from 'jszip'
 
 interface CommandOpts {
@@ -26,13 +23,13 @@ async function mail (filePath: string, {
   attachments
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
-  const user = await getSkolengoClient(credentials.credentials)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
   const mailSettings = await user.getUsersMailSettings(credentials.userId)
   const inboxFolder = mailSettings.folders.find(f => f.type === folder)
 
   if (inboxFolder === undefined) throw new Error('Impossible de trouver la boîte de réception du courriel.')
 
-  const communications = await getCommunications(user, inboxFolder, limit)
+  const communications = await user.getCommunications(inboxFolder, limit)
 
   if (filePath !== undefined) {
     const Logger = logger()
@@ -40,7 +37,7 @@ async function mail (filePath: string, {
 
     switch (ext) {
       case 'eml':
-        (await communicationsToZip(user, new JSZip(), communications, attachments)).generateNodeStream({
+        (await user.communicationsToZip(new JSZip(), communications, attachments)).generateNodeStream({
           type: 'nodebuffer',
           streamFiles: true
         }).pipe(createWriteStream(filePath))

@@ -1,7 +1,7 @@
 import { createCommand } from 'commander'
 import { Skolengo } from 'scolengo-api'
 import chalk from 'chalk'
-import { deleteCredentials, getCredentials, logger } from '../../functions'
+import { deleteCredentials, getCredentials, logger } from '../../SkolengoUser'
 
 async function logout ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)

@@ -1,7 +1,7 @@
 import { createCommand, Option } from 'commander'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getCredentials, getDateFromISO, getSkolengoClient, logger } from '../../functions'
+import { getCredentials, getDateFromISO, logger, SkolengoUser } from '../../SkolengoUser'
 import { Lesson } from 'scolengo-api/types/models/Calendar'
 
 interface CommandOpts {
@@ -23,7 +23,7 @@ async function calendar (filePath: string, {
 }: CommandOpts): Promise<void> {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
-  const user = await getSkolengoClient(credentials.credentials)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
   const agenda = await user.getAgenda(studentId, getDateFromISO(new Date(from)), getDateFromISO(new Date(to)), limit !== undefined ? parseInt(limit, 10) : undefined)
 
   if (filePath !== undefined) {

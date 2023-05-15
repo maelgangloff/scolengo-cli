@@ -1,14 +1,14 @@
 import { createCommand } from 'commander'
 import chalk from 'chalk'
 import { Skolengo, TokenSet } from 'scolengo-api'
-import { getCredentials, logger, onTokenRefresh } from '../../functions'
+import { getCredentials, logger, SkolengoUser } from '../../SkolengoUser'
 
 async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
   const credentials = getCredentials(uid)
 
   const oidClient = await Skolengo.getOIDClient(credentials.credentials.school)
   const newTokenSet = await oidClient.refresh(new TokenSet(credentials.credentials.tokenSet))
-  onTokenRefresh(newTokenSet)
+  SkolengoUser.onTokenRefresh(newTokenSet)
   const claims = newTokenSet.claims()
   const Logger = logger()
   Logger.info(chalk.gray(`UID : ${claims.sub}`))

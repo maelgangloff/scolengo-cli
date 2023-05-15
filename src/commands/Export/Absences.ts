@@ -1,7 +1,7 @@
 import { createCommand, Option } from 'commander'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { getAbsencesFiles, getCredentials, getSkolengoClient, logger } from '../../functions'
+import { getCredentials, logger, SkolengoUser } from '../../SkolengoUser'
 
 interface CommandOpts {
   uid: string | undefined
@@ -19,8 +19,8 @@ async function absences (filePath: string, {
   const credentials = getCredentials(uid)
   const studentId = student ?? credentials.userId
 
-  const user = await getSkolengoClient(credentials.credentials)
-  const absencesFiles = await getAbsencesFiles(user, studentId, limit)
+  const user = await SkolengoUser.getSkolengoUser(credentials.credentials)
+  const absencesFiles = await user.getAbsencesFiles(studentId, limit)
 
   if (filePath !== undefined) {
     const Logger = logger()
