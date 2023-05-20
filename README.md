@@ -1,4 +1,8 @@
 # scolengo-cli
+<p align="center">
+  <img src="https://github.com/The-Rabbit-Team/.github/blob/master/banners/scolengo-cli.png?raw=true" />
+</p>
+
 Une application console non-officielle permettant d'exporter ses données provenant de l'API Skolengo.
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour permettre le téléchargement de vos propres données depuis le serveur API.
 
