@@ -1,12 +1,14 @@
 # scolengo-cli
+[![view on npm](http://img.shields.io/npm/v/scolengo-cli.svg?style=flat-square)](https://www.npmjs.org/package/scolengo-cli)
+[![Discord](https://img.shields.io/discord/1095829734211977276?label=Discord&style=flat-square)](https://discord.gg/9u69mxsFT6)
+[![npm](https://img.shields.io/npm/dm/scolengo-cli?style=flat-square)](https://npm-stat.com/charts.html?package=scolengo-cli)
+
 <p align="center">
   <img src="https://github.com/The-Rabbit-Team/.github/blob/master/banners/scolengo-cli.png?raw=true" />
 </p>
 
 Une application console non-officielle permettant d'exporter ses données provenant de l'API Skolengo.
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour permettre le téléchargement de vos propres données depuis le serveur API.
-
-![Interactive CLI](docs/interactive.gif)
 
 ## Remarques importantes
 
@@ -25,6 +27,8 @@ Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelganglo
 ```shell
 npm i -g scolengo-cli
 ```
+
+![Interactive CLI](docs/interactive.gif)
 
 ## Usage
 ### Commandes principales
