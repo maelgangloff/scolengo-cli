@@ -1,6 +1,7 @@
 import { createCommand } from 'commander'
 import chalk from 'chalk'
-import { Skolengo, TokenSet } from 'scolengo-api'
+import { Skolengo } from 'scolengo-api'
+import { TokenSet } from 'openid-client'
 import { getCredentials, logger, SkolengoUser } from '../../SkolengoUser'
 
 async function refresh ({ uid }: { uid: string | undefined }): Promise<void> {
