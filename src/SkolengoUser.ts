@@ -40,7 +40,7 @@ export class SkolengoUser extends Skolengo {
   public static async getSkolengoUser (credentials: AuthConfig): Promise<SkolengoUser> {
     const Logger = logger()
 
-    const httpClient = axios.create()
+    const httpClient = axios.create({ baseURL: 'https://api.skolengo.com/api/v1/bff-sko-app' })
     httpClient.interceptors.response.use(res => {
       const { host, path, method } = res.request as ClientRequest
       Logger.log({ level: 'verbose', message: `${method} ${res.status}:${res.statusText} https://${(host ?? '') + (path ?? '')}` })
