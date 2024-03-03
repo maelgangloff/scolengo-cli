@@ -10,16 +10,17 @@
 Une application console non-officielle permettant d'exporter ses données provenant de l'API Skolengo.
 Cet utilitaire utilise la librairie [scolengo-api](https://github.com/maelgangloff/scolengo-api) pour permettre le téléchargement de vos propres données depuis le serveur API.
 
-## Remarques importantes
-
- - Il est clairement mentionné que cette librairie est n'est pas officielle.
- - Ce module n'est pas une contrefaçon car il n'existe pas de module similaire édité officiellement.
- - Les utilisateurs ne peuvent accéder qu'à leurs propres données. Ils sont soumis au même processus d'authentification que celui implémenté dans l'application.
- - Les données des utilisateurs ne sont pas davantage exposées puisqu'un utilisateur ne peut accéder qu'à ses propres données. Personne n'a le contrôle sur cette limitation qui est inhérente au fonctionnement de l'API des serveurs de Skolengo.
- - Cette librairie ne se suffit pas à elle-même pour fonctionner. Il est nécessaire de l'importer dans un projet et l'utilisateur final est le seul responsable de son code et des éventuelles conséquences.
- - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du fichier de licence GPLv3 disponible publiquement [LICENSE](https://github.com/maelgangloff/scolengo-cli/blob/master/LICENSE) ainsi que de ce présent fichier de présentation.
- - Tout utilisateur de cette librairie a *a priori* lu l'entièreté du code de ce projet avant toute utilisation.
- - Eu égard l'ensemble de ces remarques, les contributeurs et *a fortiori* l'auteur du projet ne peuvent être tenus responsables de tout dommage potentiel.
+> [!WARNING]
+> ## Disclaimer
+> - Il est clairement mentionné que cette librairie n'est pas officiellement éditée par la société éditrice du logiciel *Skolengo*.
+> - Ce module n'est pas une contrefaçon car il n'existe pas de module similaire édité officiellement.
+> - Les utilisateurs ne peuvent accéder qu'à leurs propres données. Ils sont soumis au même processus d'authentification que celui implémenté dans l'application et imposé par le serveur API.
+> - Les données des utilisateurs ne sont pas davantage exposées puisqu'un utilisateur ne peut accéder qu'à ses propres données. Personne n'a le contrôle sur cette limitation qui est inhérente au fonctionnement de l'API des serveurs de Skolengo.
+> - Cette librairie ne se suffit pas à elle-même pour fonctionner. Il est nécessaire de l'importer dans un projet et l'utilisateur est le seul responsable de son code et des éventuelles conséquences.
+> - Tout utilisateur de cette librairie a *a priori* lu et approuvé l'entièreté du fichier de licence GPLv3 disponible publiquement [LICENSE](https://github.com/maelgangloff/scolengo-cli/blob/master/LICENSE) ainsi que de ce présent fichier de présentation.
+> - Tout utilisateur de cette librairie a *a priori* lu et compris l'entièreté du code de ce projet avant toute utilisation.
+> - L'auteur de ce projet n'agit pas en tant qu'intermédiaire de traitement des données au sens du RGPD. Les utilisateurs sont responsables de leur propre conformité au RGPD lors de l'utilisation de cette librairie. Ils doivent s'assurer que leur utilisation de cette librairie est conforme aux exigences du RGPD et de toute autre législation applicable en matière de protection des données.
+> - Eu égard l'ensemble de ces remarques, les contributeurs et *a fortiori* l'auteur du projet ne peuvent être tenus responsables de tout dommage potentiel.
 
 
 ## Installation et mise à jour
